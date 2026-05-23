@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/risaac09/gene-keys-data/schemas/sequence.schema.json",
+  "title": "Gene Keys Sequence",
+  "description": "Structural data for one of the three Gene Keys Hologenetic Profile sequences (Activation, Venus, Pearl). Describes the ordered set of spheres and their astronomical derivations. Does not hold individual profile data.",
+  "type": "object",
+  "required": ["id", "name", "sphere_count", "spheres"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "enum": ["activation", "venus", "pearl"],
+      "description": "Sequence identifier."
+    },
+    "name": {
+      "type": "string",
+      "description": "Canonical sequence name."
+    },
+    "sphere_count": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of spheres in this sequence."
+    },
+    "spheres": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["position"],
+        "additionalProperties": false,
+        "properties": {
+          "position": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Position in the sequence, starting from 1."
+          },
+          "name": {
+            "type": ["string", "null"],
+            "description": "Sphere name. Null until contributed."
+          },
+          "derivation": {
+            "type": ["string", "null"],
+            "description": "Astronomical position from which this sphere derives (e.g., 'Personality Sun'). Null until contributed."
+          }
+        }
+      }
+    }
+  }
+}

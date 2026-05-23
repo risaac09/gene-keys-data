@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/risaac09/gene-keys-data/schemas/hexagram.schema.json",
+  "title": "Gene Keys Hexagram",
+  "description": "Structural data for one of the 64 Gene Keys hexagrams. Frequency text descriptions are not included; this schema describes the substrate only.",
+  "type": "object",
+  "required": ["id", "line_count", "frequencies"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 64,
+      "description": "Gene Keys hexagram number, 1 to 64."
+    },
+    "line_count": {
+      "type": "integer",
+      "const": 6,
+      "description": "Every hexagram has six lines."
+    },
+    "frequencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["shadow", "gift", "siddhi"]
+      },
+      "minItems": 3,
+      "maxItems": 3,
+      "uniqueItems": true,
+      "description": "The three frequencies of any Gene Key. Always shadow, gift, siddhi."
+    },
+    "name": {
+      "type": ["string", "null"],
+      "description": "The canonical hexagram name from Gene Keys Publishing. Null until contributed."
+    },
+    "codon": {
+      "type": ["string", "null"],
+      "pattern": "^[ACGT]{3}$",
+      "description": "The three-letter DNA codon mapped to this hexagram in the Gene Keys system. Null until contributed."
+    },
+    "amino_acid": {
+      "type": ["string", "null"],
+      "description": "The amino acid corresponding to the codon for this hexagram. Null until contributed."
+    },
+    "i_ching_number": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "maximum": 64,
+      "description": "Cross-reference to the King Wen I Ching hexagram number. Null until contributed."
+    },
+    "human_design_gate": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "maximum": 64,
+      "description": "Cross-reference to the Human Design gate number. Null until contributed."
+    },
+    "programming_partner_id": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "maximum": 64,
+      "description": "The hexagram id of this Gene Key's programming partner. Pairs are symmetric. Null until contributed."
+    },
+    "codon_ring_id": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "maximum": 22,
+      "description": "The codon ring (1 to 22) this hexagram belongs to. Null until contributed."
+    }
+  }
+}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>gene-keys-data — viewer</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #fafaf7;
+    --ochre: #a8762a;
+    --muted: #888;
+    --rule: #e5e5e0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.5;
+  }
+  header { border-bottom: 1px solid var(--rule); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  h1 { font-weight: 400; font-size: 1.5rem; margin: 0 0 0.25rem; }
+  header p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+  header a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid var(--ochre); }
+  .stats {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: white;
+    border: 1px solid var(--rule);
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+  }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem 1.5rem; margin-top: 0.5rem; }
+  .stats-grid div { display: flex; justify-content: space-between; }
+  .stats-grid .label { color: var(--muted); }
+  .filter-bar { margin-bottom: 1rem; }
+  input[type="text"] {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    width: 280px;
+    background: white;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; background: white; border: 1px solid var(--rule); }
+  th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--rule); }
+  th {
+    background: #f5f5f0;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+  }
+  th:hover { color: var(--ink); }
+  th.sorted { color: var(--ochre); }
+  td.null { color: #ccc; font-style: italic; font-size: 0.8rem; }
+  tr:hover { background: #f9f9f5; }
+  .frequencies { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.78rem; color: var(--muted); }
+  footer { margin-top: 2rem; font-size: 0.8rem; color: var(--muted); }
+  footer code { background: white; padding: 0.1rem 0.4rem; border: 1px solid var(--rule); border-radius: 2px; }
+  .error { color: #a02020; padding: 1rem; background: #fff5f5; border: 1px solid #a02020; border-radius: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>gene-keys-data — viewer</h1>
+  <p>64 hexagrams, structural fields. <a href="../README.md">README</a> · <a href="../CONTRIBUTING.md">contribute</a></p>
+</header>
+
+<div class="stats" id="stats">loading...</div>
+
+<div class="filter-bar">
+  <input type="text" id="filter" placeholder="filter by id or name...">
+</div>
+
+<table id="grid">
+  <thead>
+    <tr>
+      <th data-sort="id">id</th>
+      <th data-sort="name">name</th>
+      <th data-sort="codon">codon</th>
+      <th data-sort="amino_acid">amino acid</th>
+      <th data-sort="i_ching_number">i ching</th>
+      <th data-sort="human_design_gate">hd gate</th>
+      <th data-sort="programming_partner_id">prog. partner</th>
+      <th data-sort="codon_ring_id">codon ring</th>
+      <th>frequencies</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<footer>Loaded from <code>../data/hexagrams.json</code>. Run a local server (<code>python -m http.server</code>) and visit <code>/viewer/</code>. CC0 1.0 for data.</footer>
+
+<script>
+let hexagrams = [];
+let sortField = "id";
+let sortAsc = true;
+let filterText = "";
+
+const FIELDS = [
+  "name",
+  "codon",
+  "amino_acid",
+  "i_ching_number",
+  "human_design_gate",
+  "programming_partner_id",
+  "codon_ring_id"
+];
+
+async function load() {
+  try {
+    const r = await fetch("../data/hexagrams.json");
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    hexagrams = await r.json();
+    renderStats();
+    render();
+  } catch (e) {
+    document.getElementById("stats").innerHTML =
+      `<div class="error">Could not load data: ${e.message}. ` +
+      `Are you serving via a local HTTP server? Run <code>python -m http.server</code> from the project root.</div>`;
+  }
+}
+
+function renderStats() {
+  const total = hexagrams.length;
+  const grid = FIELDS.map(f => {
+    const filled = hexagrams.filter(h => h[f] !== null).length;
+    return `<div><span class="label">${f}</span><span>${filled}/${total}</span></div>`;
+  }).join("");
+  document.getElementById("stats").innerHTML =
+    `<strong>${total} hexagrams loaded</strong> · fill rate by field` +
+    `<div class="stats-grid">${grid}</div>`;
+}
+
+function renderCell(v) {
+  if (v === null) return `<td class="null">null</td>`;
+  return `<td>${v}</td>`;
+}
+
+function render() {
+  const tbody = document.querySelector("#grid tbody");
+  let rows = hexagrams.slice();
+
+  if (filterText) {
+    const f = filterText.toLowerCase();
+    rows = rows.filter(h =>
+      String(h.id).includes(f) ||
+      (h.name && h.name.toLowerCase().includes(f))
+    );
+  }
+
+  rows.sort((a, b) => {
+    const av = a[sortField];
+    const bv = b[sortField];
+    if (av === null && bv === null) return 0;
+    if (av === null) return 1;
+    if (bv === null) return -1;
+    if (av < bv) return sortAsc ? -1 : 1;
+    if (av > bv) return sortAsc ? 1 : -1;
+    return 0;
+  });
+
+  document.querySelectorAll("th[data-sort]").forEach(th => {
+    th.classList.toggle("sorted", th.dataset.sort === sortField);
+  });
+
+  tbody.innerHTML = rows.map(h => `
+    <tr>
+      ${renderCell(h.id)}
+      ${renderCell(h.name)}
+      ${renderCell(h.codon)}
+      ${renderCell(h.amino_acid)}
+      ${renderCell(h.i_ching_number)}
+      ${renderCell(h.human_design_gate)}
+      ${renderCell(h.programming_partner_id)}
+      ${renderCell(h.codon_ring_id)}
+      <td class="frequencies">${h.frequencies.join(" → ")}</td>
+    </tr>
+  `).join("");
+}
+
+document.querySelectorAll("th[data-sort]").forEach(th => {
+  th.addEventListener("click", () => {
+    const field = th.dataset.sort;
+    if (sortField === field) {
+      sortAsc = !sortAsc;
+    } else {
+      sortField = field;
+      sortAsc = true;
+    }
+    render();
+  });
+});
+
+document.getElementById("filter").addEventListener("input", e => {
+  filterText = e.target.value;
+  render();
+});
+
+load();
+</script>
+</body>
+</html>

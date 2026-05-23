@@ -1,0 +1,11 @@
+{
+  "id": "activation",
+  "name": "Activation Sequence",
+  "sphere_count": 4,
+  "spheres": [
+    {"position": 1, "name": "Life's Work", "derivation": "Personality Sun"},
+    {"position": 2, "name": "Evolution", "derivation": "Personality Earth"},
+    {"position": 3, "name": "Radiance", "derivation": "Design Sun"},
+    {"position": 4, "name": "Purpose", "derivation": "Design Earth"}
+  ]
+}
