@@ -17,6 +17,7 @@ def main():
     total = len(hexagrams)
     fields = [
         "name",
+        "i_ching_name_pinyin",
         "codon",
         "amino_acid",
         "i_ching_number",

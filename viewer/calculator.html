@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>gene-keys-data — calculator</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #fafaf7;
+    --ochre: #a8762a;
+    --teal: #2a7a8a;
+    --muted: #888;
+    --rule: #e5e5e0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.5;
+  }
+  header { border-bottom: 1px solid var(--rule); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  h1 { font-weight: 400; font-size: 1.5rem; margin: 0 0 0.25rem; }
+  header p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+  header a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid var(--ochre); }
+  nav { margin-top: 0.75rem; font-size: 0.85rem; display: flex; gap: 1.25rem; }
+  nav a { color: var(--muted); text-decoration: none; border-bottom: 1px solid transparent; padding-bottom: 1px; }
+  nav a:hover { color: var(--ochre); }
+  nav a.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+  h2 { font-size: 1rem; font-weight: 500; margin: 1.5rem 0 0.75rem; }
+  h3 { font-size: 0.85rem; font-weight: 500; margin: 1rem 0 0.5rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .intro { background: white; border: 1px solid var(--rule); padding: 1rem 1.25rem; border-radius: 4px; font-size: 0.9rem; color: var(--ink); margin-bottom: 1.5rem; }
+  .intro p { margin: 0; }
+  .intro p + p { margin-top: 0.5rem; }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; align-items: center; }
+  .btn {
+    border: 1px solid var(--rule);
+    background: white;
+    color: var(--ink);
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s;
+  }
+  .btn:hover { border-color: var(--ochre); }
+  .btn.primary { background: var(--ochre); color: white; border-color: var(--ochre); }
+  .btn.primary:hover { background: #8a6020; border-color: #8a6020; }
+  .btn.subtle { color: var(--muted); }
+
+  textarea {
+    width: 100%;
+    min-height: 180px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.82rem;
+    padding: 0.75rem;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: white;
+    line-height: 1.45;
+    resize: vertical;
+  }
+  textarea:focus { outline: 2px solid var(--ochre); outline-offset: -1px; border-color: var(--ochre); }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .stat { background: white; border: 1px solid var(--rule); padding: 1rem 1.25rem; border-radius: 4px; }
+  .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+  .stat-value { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.5rem; margin-top: 0.25rem; color: var(--ink); }
+  .stat-sub { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
+
+  .chart-container { background: white; border: 1px solid var(--rule); padding: 1.25rem; border-radius: 4px; margin-bottom: 1.5rem; }
+  svg.chart { width: 100%; height: 280px; display: block; }
+  .chart .bar { fill: var(--ochre); }
+  .chart .bar:hover { fill: #8a6020; }
+  .chart .axis-line { stroke: var(--rule); stroke-width: 1; }
+  .chart .baseline { stroke: var(--teal); stroke-width: 1; stroke-dasharray: 4 4; }
+  .chart .axis-label { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; fill: var(--muted); }
+  .chart .baseline-label { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; fill: var(--teal); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: white; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+  th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--rule); }
+  th { background: #f5f5f0; font-weight: 500; font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  td.signature { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem; }
+  td.numeric { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; text-align: right; }
+  tr:hover td { background: #f9f9f5; }
+
+  .empty { color: var(--muted); font-style: italic; padding: 2rem; text-align: center; background: white; border: 1px dashed var(--rule); border-radius: 4px; }
+  footer { margin-top: 2rem; font-size: 0.8rem; color: var(--muted); }
+  .error { color: #a02020; padding: 1rem; background: #fff5f5; border: 1px solid #a02020; border-radius: 4px; margin: 1rem 0; }
+  details { font-size: 0.85rem; margin-top: 0.75rem; color: var(--muted); }
+  summary { cursor: pointer; }
+  code { background: white; padding: 0.05rem 0.35rem; border: 1px solid var(--rule); border-radius: 2px; font-size: 0.85em; }
+</style>
+</head>
+<body>
+<header>
+  <h1>gene-keys-data — calculator</h1>
+  <p>Co-occurrence frequency for any CSV of profile signatures. <a href="../README.md">README</a></p>
+  <nav>
+    <a href="./">table</a>
+    <a href="./wheel.html">wheel</a>
+    <a href="./graph.html">graph</a>
+    <a href="./calculator.html" class="active">calculator</a>
+  </nav>
+</header>
+
+<div class="intro">
+  <p>Paste a CSV of profiles below. The calculator groups rows by their full signature (every column joined), counts how often each signature occurs, and surfaces the frequency distribution. The repo's <code>cooccurrence_skeleton.py</code> does the same computation in Python; this page is the in-browser version.</p>
+  <p>Bring your own data, or click <em>load sample</em> to see a synthetic 200-profile dataset that demonstrates the long-tail shape.</p>
+</div>
+
+<h2>Input</h2>
+<div class="toolbar">
+  <button class="btn" id="load-sample">load sample</button>
+  <button class="btn subtle" id="clear">clear</button>
+  <button class="btn primary" id="compute">compute</button>
+</div>
+<textarea id="csv-input" placeholder="type,cross,profile&#10;Generator,Right Angle Cross of the Sphinx,5/1&#10;Projector,Right Angle Cross of the Vessel of Love,3/5&#10;..."></textarea>
+<details>
+  <summary>Format notes</summary>
+  <p>First row is treated as headers. Subsequent rows are signatures. Each row's columns are joined into a single signature for counting. Simple comma split — quoted fields and embedded commas are not yet handled.</p>
+</details>
+
+<div id="results"></div>
+
+<footer>
+  No data leaves your browser. Computation is local. To run the same analysis on a large dataset offline, see <code>examples/cooccurrence_skeleton.py</code> in the repo.
+</footer>
+
+<script>
+const TYPES = ["Generator", "Manifesting Generator", "Projector", "Manifestor", "Reflector"];
+const TYPE_WEIGHTS = [0.37, 0.33, 0.20, 0.08, 0.02];
+const CROSSES = [
+  "Right Angle Cross of the Sphinx", "Right Angle Cross of the Vessel of Love",
+  "Right Angle Cross of Planning", "Right Angle Cross of Service",
+  "Right Angle Cross of Eden", "Right Angle Cross of Tension",
+  "Left Angle Cross of Healing", "Left Angle Cross of Identification",
+  "Left Angle Cross of Migration", "Left Angle Cross of Confusion",
+  "Right Angle Cross of the Vessel of Love", "Juxtaposition Cross of Doubts"
+];
+const PROFILES = ["1/3", "1/4", "2/4", "2/5", "3/5", "3/6", "4/1", "4/6", "5/1", "5/2", "6/2", "6/3"];
+
+let csvRows = null;
+
+function sample() {
+  const lines = ["type,cross,profile"];
+  for (let i = 0; i < 200; i++) {
+    const t = weightedPick(TYPES, TYPE_WEIGHTS);
+    const c = CROSSES[Math.floor(Math.random() * CROSSES.length)];
+    const p = PROFILES[Math.floor(Math.random() * PROFILES.length)];
+    lines.push(`${t},${c},${p}`);
+  }
+  return lines.join("\n");
+}
+
+function weightedPick(items, weights) {
+  const r = Math.random();
+  let acc = 0;
+  for (let i = 0; i < items.length; i++) {
+    acc += weights[i];
+    if (r < acc) return items[i];
+  }
+  return items[items.length - 1];
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split("\n").filter(l => l.trim());
+  if (lines.length < 2) return { headers: [], rows: [] };
+  const headers = lines[0].split(",").map(s => s.trim());
+  const rows = lines.slice(1).map(l => l.split(",").map(s => s.trim()));
+  return { headers, rows };
+}
+
+function compute(rows) {
+  const counts = new Map();
+  for (const r of rows) {
+    const sig = r.join(" · ");
+    counts.set(sig, (counts.get(sig) || 0) + 1);
+  }
+  const total = rows.length;
+  const entries = [...counts.entries()]
+    .map(([sig, count]) => ({ sig, count, frequency: count / total }))
+    .sort((a, b) => b.count - a.count);
+  return { total, unique: counts.size, entries };
+}
+
+function renderStats({ total, unique, entries }) {
+  const maxFreq = entries[0]?.frequency || 0;
+  const meanFreq = total > 0 ? 1 / unique : 0;
+  const singletons = entries.filter(e => e.count === 1).length;
+  const singletonRate = unique > 0 ? singletons / unique : 0;
+
+  return `
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">total profiles</div>
+        <div class="stat-value">${total}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">unique signatures</div>
+        <div class="stat-value">${unique}</div>
+        <div class="stat-sub">${(unique / total * 100).toFixed(1)}% of rows are distinct</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">max frequency</div>
+        <div class="stat-value">${(maxFreq * 100).toFixed(2)}%</div>
+        <div class="stat-sub">${entries[0]?.count} occurrences</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">expected baseline (1/N)</div>
+        <div class="stat-value">${(meanFreq * 100).toFixed(3)}%</div>
+        <div class="stat-sub">uniform distribution</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">singletons</div>
+        <div class="stat-value">${singletons}</div>
+        <div class="stat-sub">${(singletonRate * 100).toFixed(0)}% of unique sigs appear once</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderChart(entries) {
+  const top = entries.slice(0, 20);
+  if (top.length === 0) return "";
+
+  const W = 720, H = 280;
+  const PAD_L = 50, PAD_R = 20, PAD_T = 16, PAD_B = 32;
+  const innerW = W - PAD_L - PAD_R;
+  const innerH = H - PAD_T - PAD_B;
+
+  const maxFreq = top[0].frequency;
+  const meanFreq = entries.length > 0 ? 1 / entries.length : 0;
+  const yMax = Math.max(maxFreq, meanFreq * 2);
+  const barW = innerW / top.length;
+
+  const bars = top.map((e, i) => {
+    const h = (e.frequency / yMax) * innerH;
+    const x = PAD_L + i * barW + 2;
+    const y = PAD_T + innerH - h;
+    return `<rect class="bar" x="${x}" y="${y}" width="${barW - 4}" height="${h}">
+      <title>${e.sig}\n${e.count} occurrences · ${(e.frequency * 100).toFixed(2)}%</title>
+    </rect>`;
+  }).join("");
+
+  // Y axis ticks
+  const yTicks = [0, yMax / 2, yMax].map(v => {
+    const y = PAD_T + innerH - (v / yMax) * innerH;
+    return `
+      <line class="axis-line" x1="${PAD_L}" y1="${y}" x2="${W - PAD_R}" y2="${y}" opacity="0.4"/>
+      <text class="axis-label" x="${PAD_L - 6}" y="${y + 3}" text-anchor="end">${(v * 100).toFixed(1)}%</text>
+    `;
+  }).join("");
+
+  // Baseline (expected uniform frequency)
+  const baselineY = PAD_T + innerH - (meanFreq / yMax) * innerH;
+  const baseline = `
+    <line class="baseline" x1="${PAD_L}" y1="${baselineY}" x2="${W - PAD_R}" y2="${baselineY}"/>
+    <text class="baseline-label" x="${W - PAD_R - 4}" y="${baselineY - 4}" text-anchor="end">expected ${(meanFreq * 100).toFixed(3)}%</text>
+  `;
+
+  return `
+    <div class="chart-container">
+      <h3>top 20 by frequency</h3>
+      <svg class="chart" viewBox="0 0 ${W} ${H}">
+        ${yTicks}
+        ${bars}
+        ${baseline}
+        <text class="axis-label" x="${PAD_L}" y="${H - 8}">rank 1</text>
+        <text class="axis-label" x="${W - PAD_R}" y="${H - 8}" text-anchor="end">rank ${top.length}</text>
+      </svg>
+    </div>
+  `;
+}
+
+function renderTable(entries) {
+  const top = entries.slice(0, 40);
+  const rows = top.map((e, i) => `
+    <tr>
+      <td class="numeric">${i + 1}</td>
+      <td class="signature">${escapeHTML(e.sig)}</td>
+      <td class="numeric">${e.count}</td>
+      <td class="numeric">${(e.frequency * 100).toFixed(2)}%</td>
+    </tr>
+  `).join("");
+  return `
+    <h3>top 40 signatures</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>rank</th>
+          <th>signature</th>
+          <th class="numeric" style="text-align: right;">count</th>
+          <th class="numeric" style="text-align: right;">frequency</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    ${entries.length > 40 ? `<p style="font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem;">+ ${entries.length - 40} more signatures with lower counts.</p>` : ''}
+  `;
+}
+
+function escapeHTML(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function render() {
+  const results = document.getElementById("results");
+  const text = document.getElementById("csv-input").value.trim();
+  if (!text) {
+    results.innerHTML = '<div class="empty">Paste a CSV above (or click load sample), then press compute.</div>';
+    return;
+  }
+  const { headers, rows } = parseCSV(text);
+  if (rows.length === 0) {
+    results.innerHTML = '<div class="error">No data rows found. The first row is treated as headers; add at least one data row below.</div>';
+    return;
+  }
+  const result = compute(rows);
+  results.innerHTML = `
+    <h2>Results</h2>
+    ${renderStats(result)}
+    ${renderChart(result.entries)}
+    ${renderTable(result.entries)}
+  `;
+}
+
+document.getElementById("load-sample").addEventListener("click", () => {
+  document.getElementById("csv-input").value = sample();
+});
+document.getElementById("clear").addEventListener("click", () => {
+  document.getElementById("csv-input").value = "";
+  document.getElementById("results").innerHTML = '<div class="empty">Paste a CSV above (or click load sample), then press compute.</div>';
+});
+document.getElementById("compute").addEventListener("click", render);
+
+document.getElementById("results").innerHTML = '<div class="empty">Paste a CSV above (or click load sample), then press compute.</div>';
+</script>
+</body>
+</html>

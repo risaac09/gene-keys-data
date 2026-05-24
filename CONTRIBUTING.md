@@ -13,7 +13,8 @@ Each entry in `data/hexagrams.json` has these fields. Status of each:
 | `frequencies` | confident (always `["shadow", "gift", "siddhi"]`) |
 | `i_ching_number` | filled (equal to `id`; Gene Keys uses King Wen sequence) |
 | `human_design_gate` | filled (equal to `id`; HD gates use the same 64-position King Wen numbering) |
-| `name` | needs canonical fill |
+| `i_ching_name_pinyin` | filled (toned pinyin romanization of the King Wen hexagram name; factual transliteration of ancient Chinese, public domain) |
+| `name` | not accepted without Gene Keys Publishing's blessing (see below) |
 | `codon` | needs canonical fill |
 | `amino_acid` | needs canonical fill |
 | `programming_partner_id` | needs canonical fill |
@@ -21,7 +22,7 @@ Each entry in `data/hexagrams.json` has these fields. Status of each:
 
 ## Source guidance
 
-- **Hexagram names.** The official Gene Keys Publishing list at genekeys.com. The names are descriptive, not proprietary phrasing, but cite the source in the PR.
+- **Hexagram names (`name`).** This is the canonical Gene Keys name from Rudd's published material (e.g., "Beauty", "Unity", "Innocence"). Individually the words are ordinary English; the *curated list of 64* is plausibly Rudd's creative selection and therefore his IP. We don't accept PRs that fill `name` from a third-party transcription. The field stays null until Gene Keys Publishing communicates explicit permission to redistribute the list under CC0, or until a contributor produces a clearly-independent list with a different editorial justification. If you have a path to that permission, open an issue first.
 - **Codon and amino acid mappings.** Cross-reference Rudd's *The Gene Keys* (2013) appendix material against canonical genetic code tables. The codon mapping follows the I Ching to DNA correspondence specific to the Gene Keys system; arbitrary genetic code tables do not produce the same mapping.
 - **I Ching number cross-reference.** The King Wen sequence is the standard. Note whether the Gene Keys numbering follows King Wen directly or applies a transformation; cite the source.
 - **Human Design gate cross-reference.** Standard mapping is GK number equals HD gate number. Verify against Jovian Archive before committing.

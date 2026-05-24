@@ -16,17 +16,29 @@ People who want to do data work with the Gene Keys. Chart co-occurrence regressi
 
 The repo exists because a conversation surfaced a regression on a roughly one-million-profile dataset that produced co-occurrence frequencies near .005 for chart-cross-profile triples. The work was done in private files. There was nowhere public to point at for someone else who wanted to run a similar analysis.
 
+## Quickstart
+
+```bash
+git clone https://github.com/risaac09/gene-keys-data.git
+cd gene-keys-data
+pip install -r requirements.txt
+python examples/validate.py
+python -m http.server          # then visit http://localhost:8000/viewer/
+```
+
+`examples/walkthrough.md` walks from clone to the join pattern in six short steps. `CONTEXT.md` is the relational origin of the repo.
+
 ## What's here
 
-- `data/hexagrams.json` — 64 hexagram entries with structural fields. `i_ching_number` and `human_design_gate` are filled (both equal `id`, since Gene Keys, the King Wen I Ching sequence, and Human Design gates share the same 64-position numbering). Names, codons, amino acids, programming-partner pairs, and codon-ring assignments are `null` pending canonical contribution; see `CONTRIBUTING.md`.
+- `data/hexagrams.json` — 64 hexagram entries. `i_ching_number`, `human_design_gate`, and `i_ching_name_pinyin` are filled; `name` (the canonical Gene Keys name from Rudd), `codon`, `amino_acid`, `programming_partner_id`, and `codon_ring_id` are `null` pending canonical contribution.
 - `data/sequences/activation.json` — the four-sphere Activation Sequence (Life's Work, Evolution, Radiance, Purpose) with astronomical derivations.
 - `data/sequences/README.md` — status of the Venus and Pearl sequences, pending canonical verification.
-- `schemas/hexagram.schema.json` — JSON Schema validating each hexagram entry.
-- `schemas/sequence.schema.json` — JSON Schema validating any sequence file.
+- `schemas/hexagram.schema.json` and `schemas/sequence.schema.json` — JSON Schemas. `examples/validate.py` runs schema + cross-entry invariant checks (id uniqueness, sphere-count match, position uniqueness) on every push and PR via GitHub Actions.
 - `examples/load_hexagrams.py` — minimal loader that prints fill-rate statistics.
-- `examples/cooccurrence_skeleton.py` — structural sketch of a chart co-occurrence frequency table. Reads a `profiles.csv` and prints the top signatures by frequency; the regression work that produced the .005 baseline lives downstream of this skeleton.
-- `examples/validate.py` — validates all data files against their schemas. Run before any PR.
-- `viewer/index.html` — single-file vanilla-JS viewer for the hexagram data. No build step. Run `python -m http.server` from the project root and visit `/viewer/`.
+- `examples/cooccurrence_skeleton.py` — structural sketch of a chart co-occurrence frequency table. Reads `profiles.csv` and prints top signatures by frequency. Regression work that produced the .005 baseline lives downstream.
+- `examples/generate_demo_profiles.py` + `examples/demo_profiles.csv` — seeded synthetic 100-profile dataset so the skeleton runs out of the box. Not real chart data.
+- `examples/walkthrough.md` — clone-to-join walkthrough.
+- `viewer/index.html` — single-file vanilla-JS viewer. Sortable table, click any row for a detail panel. No build step.
 
 ## What's not here
 
@@ -36,7 +48,7 @@ The repo exists because a conversation surfaced a regression on a roughly one-mi
 
 ## v0 status
 
-This is a first build. The structure is honest and the substance is partial. The hexagram entries carry IDs 1 through 64, the invariant fields (line count, frequencies), and the I Ching / Human Design cross-references (filled with confidence since all three systems share King Wen numbering). The Activation Sequence is filled. Names, codons, amino acids, programming-partner pairs, codon rings, and the Venus and Pearl sequences are `null` or forthcoming, waiting for canonical contribution. Validation passes against the schemas today, which is the only correctness claim v0 makes.
+This is a first build. The structure is honest and the substance is partial. The hexagram entries carry IDs 1 through 64, the invariant fields (line count, frequencies), the I Ching / Human Design cross-references (filled with confidence since all three systems share King Wen numbering), and pinyin transliterations (factual romanization of ancient Chinese, public domain). The Activation Sequence is filled. The canonical Gene Keys `name` field stays null pending Gene Keys Publishing's blessing (see `CONTRIBUTING.md`). Codons, amino acids, programming-partner pairs, codon rings, and the Venus and Pearl sequences are `null` or forthcoming, waiting for canonical contribution. Validation passes against the schemas today, which is the only correctness claim v0 makes.
 
 ## License
 

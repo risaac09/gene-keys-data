@@ -31,7 +31,11 @@
     },
     "name": {
       "type": ["string", "null"],
-      "description": "The canonical hexagram name from Gene Keys Publishing. Null until contributed."
+      "description": "The canonical Gene Keys hexagram name from Rudd's published material. Stays null in this repo without Gene Keys Publishing's explicit blessing; see CONTRIBUTING.md."
+    },
+    "i_ching_name_pinyin": {
+      "type": ["string", "null"],
+      "description": "Toned pinyin romanization of the King Wen hexagram name (e.g., 'Qián', 'Kūn'). Public domain. Factual transliteration of ancient Chinese."
     },
     "codon": {
       "type": ["string", "null"],

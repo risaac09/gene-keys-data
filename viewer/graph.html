@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>gene-keys-data — graph</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #fafaf7;
+    --ochre: #a8762a;
+    --ochre-soft: rgba(168, 118, 42, 0.15);
+    --teal: #2a7a8a;
+    --teal-soft: rgba(42, 122, 138, 0.18);
+    --muted: #888;
+    --rule: #e5e5e0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.5;
+  }
+  header { border-bottom: 1px solid var(--rule); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  h1 { font-weight: 400; font-size: 1.5rem; margin: 0 0 0.25rem; }
+  header p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+  header a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid var(--ochre); }
+  nav { margin-top: 0.75rem; font-size: 0.85rem; display: flex; gap: 1.25rem; }
+  nav a { color: var(--muted); text-decoration: none; border-bottom: 1px solid transparent; padding-bottom: 1px; }
+  nav a:hover { color: var(--ochre); }
+  nav a.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; align-items: center; }
+  .toolbar-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-right: 0.5rem; }
+  .toggle {
+    border: 1px solid var(--rule);
+    background: white;
+    color: var(--ink);
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: inherit;
+  }
+  .toggle:hover { border-color: var(--ochre); }
+  .toggle.active.partner { background: var(--ochre); color: white; border-color: var(--ochre); }
+  .toggle.active.ring { background: var(--teal); color: white; border-color: var(--teal); }
+  .toggle.active.sequence { background: var(--ink); color: white; border-color: var(--ink); }
+  .toggle .fill-rate { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; opacity: 0.75; margin-left: 0.4rem; }
+
+  .layout { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; align-items: start; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  .grid-container { aspect-ratio: 1; max-width: 720px; width: 100%; }
+  svg { width: 100%; height: 100%; user-select: none; }
+  .cell-bg { fill: white; stroke: var(--rule); stroke-width: 1; }
+  .cell-bg.ring-active { fill: var(--teal-soft); stroke: var(--teal); }
+  .cell-bg.partner-active { fill: var(--ochre-soft); stroke: var(--ochre); }
+  .cell-bg.focused { fill: var(--ochre); stroke: var(--ochre); }
+  .cell-bg.partner-of-focused { fill: var(--ochre-soft); stroke: var(--ochre); stroke-dasharray: 3 3; }
+  .cell { cursor: pointer; transition: opacity 0.12s; }
+  .cell:hover .cell-bg { stroke-width: 2; }
+  .cell-id { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 22px; text-anchor: middle; dominant-baseline: central; fill: var(--ink); pointer-events: none; }
+  .cell.focused .cell-id { fill: white; }
+  .partner-chord { stroke: var(--ochre); stroke-width: 1.5; fill: none; opacity: 0.55; pointer-events: none; }
+  .sequence-path { stroke: var(--ink); stroke-width: 1.25; fill: none; opacity: 0.35; stroke-dasharray: 1 4; pointer-events: none; }
+
+  .detail-panel { background: white; border: 1px solid var(--rule); padding: 1.5rem; border-radius: 4px; font-size: 0.9rem; min-height: 320px; position: sticky; top: 1rem; }
+  .detail-panel h2 { margin: 0 0 1rem; font-size: 1.1rem; font-weight: 500; }
+  .detail-panel dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.4rem 1rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem; align-items: baseline; }
+  .detail-panel dt { color: var(--muted); }
+  .detail-panel dd { margin: 0; word-break: break-all; }
+  .detail-panel dd.null { color: #ccc; font-style: italic; }
+  .detail-panel .freq { color: var(--ochre); }
+  .detail-panel .hint { color: var(--muted); font-style: italic; }
+  .legend { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: 0.78rem; color: var(--muted); }
+
+  footer { margin-top: 2rem; font-size: 0.8rem; color: var(--muted); }
+  .error { color: #a02020; padding: 1rem; background: #fff5f5; border: 1px solid #a02020; border-radius: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>gene-keys-data — graph</h1>
+  <p>The 64 hexagrams laid out 8×8. Toggle relationship overlays to see the lattice. <a href="../README.md">README</a></p>
+  <nav>
+    <a href="./">table</a>
+    <a href="./wheel.html">wheel</a>
+    <a href="./graph.html" class="active">graph</a>
+    <a href="./calculator.html">calculator</a>
+  </nav>
+</header>
+
+<div class="toolbar">
+  <span class="toolbar-label">overlays</span>
+  <button class="toggle partner" data-overlay="partner">programming partner <span class="fill-rate" id="rate-partner">0/64</span></button>
+  <button class="toggle ring" data-overlay="ring">codon ring <span class="fill-rate" id="rate-ring">0/64</span></button>
+  <button class="toggle sequence" data-overlay="sequence">King Wen path</button>
+</div>
+
+<div class="layout">
+  <div class="grid-container">
+    <svg viewBox="0 0 720 720" id="grid" aria-label="Gene Keys lattice"></svg>
+  </div>
+  <div class="detail-panel" id="detail">
+    <div class="hint">Click any position. Toggle overlays above to see relationships.</div>
+  </div>
+</div>
+
+<footer>
+  Grid layout is numerical (rows of 8). Relationships render when the underlying fields fill: programming-partner pairs as chord lines, codon rings as cell color groups. The King Wen sequence overlay traces 1 → 2 → ... → 64 as the canonical reading order.
+</footer>
+
+<script>
+const SVG_NS = "http://www.w3.org/2000/svg";
+const COLS = 8, ROWS = 8;
+const SIZE = 720;
+const CELL = SIZE / COLS;
+const CELL_R = CELL / 2 - 6;
+
+let hexagrams = [];
+let focused = null;
+let overlays = { partner: false, ring: false, sequence: false };
+
+function el(tag, attrs = {}, text) {
+  const e = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+function cellCenter(id) {
+  const col = (id - 1) % COLS;
+  const row = Math.floor((id - 1) / COLS);
+  return { x: col * CELL + CELL / 2, y: row * CELL + CELL / 2 };
+}
+
+async function load() {
+  try {
+    const r = await fetch("../data/hexagrams.json");
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    hexagrams = await r.json();
+    updateFillRates();
+    draw();
+  } catch (e) {
+    document.getElementById("detail").innerHTML =
+      `<div class="error">Could not load data: ${e.message}. ` +
+      `Run <code>python -m http.server</code> from the project root.</div>`;
+  }
+}
+
+function updateFillRates() {
+  const total = hexagrams.length;
+  const partnerCount = hexagrams.filter(h => h.programming_partner_id !== null).length;
+  const ringCount = hexagrams.filter(h => h.codon_ring_id !== null).length;
+  document.getElementById("rate-partner").textContent = `${partnerCount}/${total}`;
+  document.getElementById("rate-ring").textContent = `${ringCount}/${total}`;
+}
+
+function ringPalette(ringId) {
+  if (ringId == null) return null;
+  const hue = (ringId * 360 / 22) % 360;
+  return `hsla(${hue}, 45%, 60%, 0.45)`;
+}
+
+function draw() {
+  const svg = document.getElementById("grid");
+  svg.innerHTML = "";
+
+  // King Wen path overlay (sequence: 1 → 2 → ... → 64)
+  if (overlays.sequence) {
+    let path = "";
+    for (let i = 1; i <= 64; i++) {
+      const p = cellCenter(i);
+      path += (i === 1 ? "M" : "L") + ` ${p.x} ${p.y} `;
+    }
+    svg.appendChild(el("path", { d: path, class: "sequence-path" }));
+  }
+
+  // Programming partner chords
+  if (overlays.partner) {
+    const drawn = new Set();
+    hexagrams.forEach(h => {
+      if (h.programming_partner_id == null) return;
+      const key = [h.id, h.programming_partner_id].sort().join("-");
+      if (drawn.has(key)) return;
+      drawn.add(key);
+      const a = cellCenter(h.id), b = cellCenter(h.programming_partner_id);
+      svg.appendChild(el("path", {
+        d: `M ${a.x} ${a.y} Q ${SIZE / 2} ${SIZE / 2} ${b.x} ${b.y}`,
+        class: "partner-chord"
+      }));
+    });
+  }
+
+  // Cells
+  const focusedHex = focused != null ? hexagrams.find(h => h.id === focused) : null;
+  hexagrams.forEach(h => {
+    const c = cellCenter(h.id);
+    const g = el("g", { class: "cell" + (focused === h.id ? " focused" : ""), transform: `translate(${c.x}, ${c.y})` });
+
+    let bgClass = "cell-bg";
+    if (focused === h.id) bgClass += " focused";
+    else if (focusedHex && focusedHex.programming_partner_id === h.id) bgClass += " partner-of-focused";
+    else if (overlays.partner && h.programming_partner_id != null) bgClass += " partner-active";
+
+    const bg = el("rect", {
+      x: -CELL_R, y: -CELL_R,
+      width: CELL_R * 2, height: CELL_R * 2,
+      rx: 4,
+      class: bgClass
+    });
+
+    // Codon ring fill (HSL based on ring id) overrides default
+    if (overlays.ring && h.codon_ring_id != null) {
+      bg.setAttribute("fill", ringPalette(h.codon_ring_id));
+    }
+
+    g.appendChild(bg);
+    g.appendChild(el("text", { class: "cell-id" }, h.id));
+
+    g.addEventListener("click", () => {
+      focused = focused === h.id ? null : h.id;
+      draw();
+      showDetail(focused != null ? h : null);
+    });
+    g.addEventListener("mouseenter", () => { if (focused == null) showDetail(h); });
+    g.addEventListener("mouseleave", () => { if (focused == null) showDetail(null); });
+
+    svg.appendChild(g);
+  });
+}
+
+function showDetail(h) {
+  const panel = document.getElementById("detail");
+  if (!h) {
+    panel.innerHTML = '<div class="hint">Click any position. Toggle overlays above to see relationships.</div>';
+    return;
+  }
+  const fields = [
+    ["name", h.name],
+    ["i_ching_name_pinyin", h.i_ching_name_pinyin],
+    ["codon", h.codon],
+    ["amino_acid", h.amino_acid],
+    ["i_ching_number", h.i_ching_number],
+    ["human_design_gate", h.human_design_gate],
+    ["programming_partner_id", h.programming_partner_id],
+    ["codon_ring_id", h.codon_ring_id],
+  ];
+  const rows = fields
+    .filter(([k]) => k in h)
+    .map(([k, v]) =>
+      v == null
+        ? `<dt>${k}</dt><dd class="null">null</dd>`
+        : `<dt>${k}</dt><dd>${v}</dd>`
+    ).join("");
+
+  panel.innerHTML = `
+    <h2>Hexagram ${h.id}${h.name ? ' · ' + h.name : ''}</h2>
+    <dl>
+      ${rows}
+      <dt>frequencies</dt>
+      <dd class="freq">${h.frequencies.join(" → ")}</dd>
+    </dl>
+    <div class="legend">Grid position row ${Math.floor((h.id - 1) / 8) + 1}, col ${((h.id - 1) % 8) + 1}.</div>
+  `;
+}
+
+document.querySelectorAll(".toggle").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const key = btn.dataset.overlay;
+    overlays[key] = !overlays[key];
+    btn.classList.toggle("active", overlays[key]);
+    draw();
+  });
+});
+
+load();
+</script>
+</body>
+</html>
