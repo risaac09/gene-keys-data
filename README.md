@@ -38,7 +38,11 @@ python -m http.server          # then visit http://localhost:8000/viewer/
 - `examples/cooccurrence_skeleton.py` — structural sketch of a chart co-occurrence frequency table. Reads `profiles.csv` and prints top signatures by frequency. Regression work that produced the .005 baseline lives downstream.
 - `examples/generate_demo_profiles.py` + `examples/demo_profiles.csv` — seeded synthetic 100-profile dataset so the skeleton runs out of the box. Not real chart data.
 - `examples/walkthrough.md` — clone-to-join walkthrough.
-- `viewer/index.html` — single-file vanilla-JS viewer. Sortable table, click any row for a detail panel. No build step.
+- `viewer/index.html` — table view. Sortable, filterable, click any row for a detail panel.
+- `viewer/wheel.html` — circular visualization. 64 hexagrams in King Wen sequence, hover or click any position. Programming-partner chords render when those fields fill.
+- `viewer/graph.html` — 8×8 lattice with toggle overlays for programming partners, codon rings, and the King Wen sequence path.
+- `viewer/calculator.html` — in-browser co-occurrence frequency tool. Paste a CSV (or load the sample), see the long-tail distribution and the expected uniform baseline.
+- The four viewer pages share top navigation. Single-file vanilla JS, no build step.
 
 ## What's not here
 
