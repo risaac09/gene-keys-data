@@ -32,7 +32,7 @@ Each entry in `data/hexagrams.json` has these fields. Status of each:
 
 - One PR per data category. Do not mix hexagram names and codon assignments in the same PR.
 - Include the source citation in the PR description.
-- Run `python examples/validate.py` before submitting. Validation must pass.
+- Install dependencies with `pip install -r requirements.txt`, then run `python examples/validate.py` before submitting. Validation must pass; CI runs the same check on every PR.
 - If a value is contested across sources, open an issue first and resolve the contention before submitting data.
 
 ## What does not belong in PRs

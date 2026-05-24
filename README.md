@@ -24,7 +24,7 @@ The repo exists because a conversation surfaced a regression on a roughly one-mi
 - `schemas/hexagram.schema.json` — JSON Schema validating each hexagram entry.
 - `schemas/sequence.schema.json` — JSON Schema validating any sequence file.
 - `examples/load_hexagrams.py` — minimal loader that prints fill-rate statistics.
-- `examples/regression_skeleton.py` — structural sketch of a chart co-occurrence regression. Not a runnable end-to-end pipeline; it shows the join pattern between a profile dataset and the hexagram structural data.
+- `examples/cooccurrence_skeleton.py` — structural sketch of a chart co-occurrence frequency table. Reads a `profiles.csv` and prints the top signatures by frequency; the regression work that produced the .005 baseline lives downstream of this skeleton.
 - `examples/validate.py` — validates all data files against their schemas. Run before any PR.
 - `viewer/index.html` — single-file vanilla-JS viewer for the hexagram data. No build step. Run `python -m http.server` from the project root and visit `/viewer/`.
 
