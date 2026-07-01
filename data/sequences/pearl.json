@@ -1,0 +1,11 @@
+{
+  "id": "pearl",
+  "name": "Pearl Sequence",
+  "sphere_count": 4,
+  "spheres": [
+    {"position": 1, "name": "Vocation", "derivation": "Design Mars"},
+    {"position": 2, "name": "Culture", "derivation": "Design Jupiter"},
+    {"position": 3, "name": "Brand", "derivation": "Personality Sun"},
+    {"position": 4, "name": "Pearl", "derivation": "Personality Jupiter"}
+  ]
+}

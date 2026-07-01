@@ -101,10 +101,11 @@ def main():
     ]
     object_targets = [
         (
-            DATA / "sequences" / "activation.json",
+            seq_path,
             SCHEMAS / "sequence.schema.json",
             [sphere_count_matches, unique_sphere_positions],
-        ),
+        )
+        for seq_path in sorted((DATA / "sequences").glob("*.json"))
     ]
     results = [validate_array(d, s, inv) for d, s, inv in array_targets]
     results += [validate_object(d, s, inv) for d, s, inv in object_targets]
