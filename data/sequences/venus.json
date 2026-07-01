@@ -1,0 +1,12 @@
+{
+  "id": "venus",
+  "name": "Venus Sequence",
+  "sphere_count": 5,
+  "spheres": [
+    {"position": 1, "name": "Attraction", "derivation": "Design Moon"},
+    {"position": 2, "name": "IQ", "derivation": "Personality Venus"},
+    {"position": 3, "name": "EQ", "derivation": "Personality Mars"},
+    {"position": 4, "name": "SQ", "derivation": "Design Venus"},
+    {"position": 5, "name": "Core", "derivation": "Design Mars"}
+  ]
+}
