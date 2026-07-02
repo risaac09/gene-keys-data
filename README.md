@@ -30,7 +30,7 @@ python -m http.server          # then visit http://localhost:8000/viewer/
 
 ## What's here
 
-- `data/hexagrams.json` — 64 hexagram entries. `i_ching_number`, `human_design_gate`, and `i_ching_name_pinyin` are filled; `name` (the canonical Gene Keys name from Rudd), `codon`, `amino_acid`, `programming_partner_id`, and `codon_ring_id` are `null` pending canonical contribution.
+- `data/hexagrams.json` — 64 hexagram entries. `i_ching_number`, `human_design_gate`, `i_ching_name_pinyin`, and `programming_partner_id` are filled (a programming partner is the line-inverted hexagram, a computable fact of the structure, cross-checked against the published pair list); `name` (the canonical Gene Keys name from Rudd), `codon`, `amino_acid`, and `codon_ring_id` are `null` pending canonical contribution.
 - `data/sequences/activation.json` — the four-sphere Activation Sequence (Life's Work, Evolution, Radiance, Purpose) with astronomical derivations.
 - `data/sequences/venus.json` + `data/sequences/pearl.json` — the Venus Sequence (five spheres) and Pearl Sequence (four spheres) with astronomical derivations, filled 2026-07-01 from Gene Keys Publishing's official derivation document (citation in `data/sequences/README.md`).
 - `schemas/hexagram.schema.json` and `schemas/sequence.schema.json` — JSON Schemas. `examples/validate.py` runs schema + cross-entry invariant checks (id uniqueness, sphere-count match, position uniqueness) on every push and PR via GitHub Actions.
@@ -52,7 +52,7 @@ python -m http.server          # then visit http://localhost:8000/viewer/
 
 ## v0 status
 
-This is a first build. The structure is honest and the substance is partial. The hexagram entries carry IDs 1 through 64, the invariant fields (line count, frequencies), the I Ching / Human Design cross-references (filled with confidence since all three systems share King Wen numbering), and pinyin transliterations (factual romanization of ancient Chinese, public domain). All three sequences are filled (the Venus and Pearl derivations against Gene Keys Publishing's official derivation document, 2026-07-01). The canonical Gene Keys `name` field stays null pending Gene Keys Publishing's blessing (see `CONTRIBUTING.md`). Codons, amino acids, programming-partner pairs, and codon rings are `null`, waiting for canonical contribution. Validation passes against the schemas today, which is the only correctness claim v0 makes.
+This is a first build. The structure is honest and the substance is partial. The hexagram entries carry IDs 1 through 64, the invariant fields (line count, frequencies), the I Ching / Human Design cross-references (filled with confidence since all three systems share King Wen numbering), and pinyin transliterations (factual romanization of ancient Chinese, public domain). All three sequences are filled (the Venus and Pearl derivations against Gene Keys Publishing's official derivation document, 2026-07-01). The canonical Gene Keys `name` field stays null pending Gene Keys Publishing's blessing (see `CONTRIBUTING.md`). Programming partners are filled: each hexagram pairs with its line-inverted opposite, computed from the trigram structure and matching the published list exactly (2026-07-01). Codons, amino acids, and codon rings are `null`, waiting for canonical contribution. Validation passes against the schemas today, which is the only correctness claim v0 makes.
 
 ## License
 
