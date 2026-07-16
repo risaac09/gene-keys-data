@@ -38,6 +38,31 @@ def unique_sphere_positions(seq):
     return f"duplicate sphere positions: {sorted(dupes)}" if dupes else None
 
 
+def gate_partition(doc):
+    seen = Counter(g for c in doc["centers"] for g in c["gates"])
+    missing = sorted(set(range(1, 65)) - set(seen))
+    dupes = sorted(g for g, n in seen.items() if n > 1)
+    if missing or dupes:
+        return f"gate partition broken: missing {missing}, duplicated {dupes}"
+    return None
+
+
+def channel_consistency(doc):
+    gate_center = {g: c["name"] for c in doc["centers"] for g in c["gates"]}
+    problems = []
+    seen_pairs = Counter(tuple(sorted(ch["gates"])) for ch in doc["channels"])
+    dupes = sorted(p for p, n in seen_pairs.items() if n > 1)
+    if dupes:
+        problems.append(f"duplicate channel pairs: {dupes}")
+    for ch in doc["channels"]:
+        a, b = ch["gates"]
+        if ch["id"] != f"{min(a, b)}-{max(a, b)}":
+            problems.append(f"channel id {ch['id']} != low-high of gates {a},{b}")
+        if {gate_center[a], gate_center[b]} != set(ch["centers"]):
+            problems.append(f"channel {ch['id']} centers {ch['centers']} != gate membership")
+    return "; ".join(problems) if problems else None
+
+
 def validate_array(data_path, schema_path, invariants=()):
     with data_path.open() as f:
         data = json.load(f)
@@ -107,6 +132,13 @@ def main():
         )
         for seq_path in sorted((DATA / "sequences").glob("*.json"))
     ]
+    object_targets.append(
+        (
+            DATA / "human-design.json",
+            SCHEMAS / "human-design.schema.json",
+            [gate_partition, channel_consistency],
+        )
+    )
     results = [validate_array(d, s, inv) for d, s, inv in array_targets]
     results += [validate_object(d, s, inv) for d, s, inv in object_targets]
     sys.exit(0 if all(results) else 1)
