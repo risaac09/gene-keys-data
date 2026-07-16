@@ -1,0 +1,551 @@
+{
+  "id": "bodygraph",
+  "description": "The Human Design bodygraph wiring as structural fact: nine centers, each gate's center membership, and the 36 channels as gate pairs. Gate numbers are the shared King Wen numbering (gene key = I Ching hexagram = HD gate; see hexagrams.json). Channel names are Ra Uru Hu's published keynotes and stay null pending canonical contribution, the same precedent as the hexagram name field.",
+  "center_count": 9,
+  "channel_count": 36,
+  "centers": [
+    {
+      "name": "Head",
+      "gates": [
+        61,
+        63,
+        64
+      ]
+    },
+    {
+      "name": "Ajna",
+      "gates": [
+        4,
+        11,
+        17,
+        24,
+        43,
+        47
+      ]
+    },
+    {
+      "name": "Throat",
+      "gates": [
+        8,
+        12,
+        16,
+        20,
+        23,
+        31,
+        33,
+        35,
+        45,
+        56,
+        62
+      ]
+    },
+    {
+      "name": "G",
+      "gates": [
+        1,
+        2,
+        7,
+        10,
+        13,
+        15,
+        25,
+        46
+      ]
+    },
+    {
+      "name": "Heart",
+      "gates": [
+        21,
+        26,
+        40,
+        51
+      ]
+    },
+    {
+      "name": "SolarPlexus",
+      "gates": [
+        6,
+        22,
+        30,
+        36,
+        37,
+        49,
+        55
+      ]
+    },
+    {
+      "name": "Sacral",
+      "gates": [
+        3,
+        5,
+        9,
+        14,
+        27,
+        29,
+        34,
+        42,
+        59
+      ]
+    },
+    {
+      "name": "Spleen",
+      "gates": [
+        18,
+        28,
+        32,
+        44,
+        48,
+        50,
+        57
+      ]
+    },
+    {
+      "name": "Root",
+      "gates": [
+        19,
+        38,
+        39,
+        41,
+        52,
+        53,
+        54,
+        58,
+        60
+      ]
+    }
+  ],
+  "channels": [
+    {
+      "id": "1-8",
+      "gates": [
+        1,
+        8
+      ],
+      "centers": [
+        "Throat",
+        "G"
+      ],
+      "name": null
+    },
+    {
+      "id": "2-14",
+      "gates": [
+        2,
+        14
+      ],
+      "centers": [
+        "G",
+        "Sacral"
+      ],
+      "name": null
+    },
+    {
+      "id": "3-60",
+      "gates": [
+        3,
+        60
+      ],
+      "centers": [
+        "Sacral",
+        "Root"
+      ],
+      "name": null
+    },
+    {
+      "id": "4-63",
+      "gates": [
+        4,
+        63
+      ],
+      "centers": [
+        "Head",
+        "Ajna"
+      ],
+      "name": null
+    },
+    {
+      "id": "5-15",
+      "gates": [
+        5,
+        15
+      ],
+      "centers": [
+        "G",
+        "Sacral"
+      ],
+      "name": null
+    },
+    {
+      "id": "6-59",
+      "gates": [
+        6,
+        59
+      ],
+      "centers": [
+        "SolarPlexus",
+        "Sacral"
+      ],
+      "name": null
+    },
+    {
+      "id": "7-31",
+      "gates": [
+        7,
+        31
+      ],
+      "centers": [
+        "Throat",
+        "G"
+      ],
+      "name": null
+    },
+    {
+      "id": "9-52",
+      "gates": [
+        9,
+        52
+      ],
+      "centers": [
+        "Sacral",
+        "Root"
+      ],
+      "name": null
+    },
+    {
+      "id": "10-20",
+      "gates": [
+        10,
+        20
+      ],
+      "centers": [
+        "Throat",
+        "G"
+      ],
+      "name": null
+    },
+    {
+      "id": "10-34",
+      "gates": [
+        10,
+        34
+      ],
+      "centers": [
+        "G",
+        "Sacral"
+      ],
+      "name": null
+    },
+    {
+      "id": "10-57",
+      "gates": [
+        10,
+        57
+      ],
+      "centers": [
+        "G",
+        "Spleen"
+      ],
+      "name": null
+    },
+    {
+      "id": "11-56",
+      "gates": [
+        11,
+        56
+      ],
+      "centers": [
+        "Ajna",
+        "Throat"
+      ],
+      "name": null
+    },
+    {
+      "id": "12-22",
+      "gates": [
+        12,
+        22
+      ],
+      "centers": [
+        "Throat",
+        "SolarPlexus"
+      ],
+      "name": null
+    },
+    {
+      "id": "13-33",
+      "gates": [
+        13,
+        33
+      ],
+      "centers": [
+        "Throat",
+        "G"
+      ],
+      "name": null
+    },
+    {
+      "id": "16-48",
+      "gates": [
+        16,
+        48
+      ],
+      "centers": [
+        "Throat",
+        "Spleen"
+      ],
+      "name": null
+    },
+    {
+      "id": "17-62",
+      "gates": [
+        17,
+        62
+      ],
+      "centers": [
+        "Ajna",
+        "Throat"
+      ],
+      "name": null
+    },
+    {
+      "id": "18-58",
+      "gates": [
+        18,
+        58
+      ],
+      "centers": [
+        "Spleen",
+        "Root"
+      ],
+      "name": null
+    },
+    {
+      "id": "19-49",
+      "gates": [
+        19,
+        49
+      ],
+      "centers": [
+        "SolarPlexus",
+        "Root"
+      ],
+      "name": null
+    },
+    {
+      "id": "20-34",
+      "gates": [
+        20,
+        34
+      ],
+      "centers": [
+        "Throat",
+        "Sacral"
+      ],
+      "name": null
+    },
+    {
+      "id": "20-57",
+      "gates": [
+        20,
+        57
+      ],
+      "centers": [
+        "Throat",
+        "Spleen"
+      ],
+      "name": null
+    },
+    {
+      "id": "21-45",
+      "gates": [
+        21,
+        45
+      ],
+      "centers": [
+        "Throat",
+        "Heart"
+      ],
+      "name": null
+    },
+    {
+      "id": "23-43",
+      "gates": [
+        23,
+        43
+      ],
+      "centers": [
+        "Ajna",
+        "Throat"
+      ],
+      "name": null
+    },
+    {
+      "id": "24-61",
+      "gates": [
+        24,
+        61
+      ],
+      "centers": [
+        "Head",
+        "Ajna"
+      ],
+      "name": null
+    },
+    {
+      "id": "25-51",
+      "gates": [
+        25,
+        51
+      ],
+      "centers": [
+        "G",
+        "Heart"
+      ],
+      "name": null
+    },
+    {
+      "id": "26-44",
+      "gates": [
+        26,
+        44
+      ],
+      "centers": [
+        "Heart",
+        "Spleen"
+      ],
+      "name": null
+    },
+    {
+      "id": "27-50",
+      "gates": [
+        27,
+        50
+      ],
+      "centers": [
+        "Sacral",
+        "Spleen"
+      ],
+      "name": null
+    },
+    {
+      "id": "28-38",
+      "gates": [
+        28,
+        38
+      ],
+      "centers": [
+        "Spleen",
+        "Root"
+      ],
+      "name": null
+    },
+    {
+      "id": "29-46",
+      "gates": [
+        29,
+        46
+      ],
+      "centers": [
+        "G",
+        "Sacral"
+      ],
+      "name": null
+    },
+    {
+      "id": "30-41",
+      "gates": [
+        30,
+        41
+      ],
+      "centers": [
+        "SolarPlexus",
+        "Root"
+      ],
+      "name": null
+    },
+    {
+      "id": "32-54",
+      "gates": [
+        32,
+        54
+      ],
+      "centers": [
+        "Spleen",
+        "Root"
+      ],
+      "name": null
+    },
+    {
+      "id": "34-57",
+      "gates": [
+        34,
+        57
+      ],
+      "centers": [
+        "Sacral",
+        "Spleen"
+      ],
+      "name": null
+    },
+    {
+      "id": "35-36",
+      "gates": [
+        35,
+        36
+      ],
+      "centers": [
+        "Throat",
+        "SolarPlexus"
+      ],
+      "name": null
+    },
+    {
+      "id": "37-40",
+      "gates": [
+        37,
+        40
+      ],
+      "centers": [
+        "Heart",
+        "SolarPlexus"
+      ],
+      "name": null
+    },
+    {
+      "id": "39-55",
+      "gates": [
+        39,
+        55
+      ],
+      "centers": [
+        "SolarPlexus",
+        "Root"
+      ],
+      "name": null
+    },
+    {
+      "id": "42-53",
+      "gates": [
+        42,
+        53
+      ],
+      "centers": [
+        "Sacral",
+        "Root"
+      ],
+      "name": null
+    },
+    {
+      "id": "47-64",
+      "gates": [
+        47,
+        64
+      ],
+      "centers": [
+        "Head",
+        "Ajna"
+      ],
+      "name": null
+    }
+  ]
+}
