@@ -1,9 +1,8 @@
 """Sketch for a chart co-occurrence frequency table on the Gene Keys.
 
 This is a structural sketch of the analysis pattern that motivated this repo:
-a study against a roughly one-million-profile dataset that found co-occurrence
-frequencies near .005 for chart-cross-profile triples (roughly one in one
-hundred thousand for the surface combination).
+co-occurrence work done privately against a large profile dataset, with the
+frequency table as its first step.
 
 The profile dataset is NOT included in this repo. This script shows how a
 profile dataset would join against the hexagram structural data once both
@@ -38,8 +37,8 @@ def load_hexagrams():
 def profile_signature(row):
     """Surface signature for a profile.
 
-    The original .005 baseline came from a triple of type, incarnation cross,
-    and profile (line pair). Adjust the field names to match your dataset.
+    The motivating analysis used a triple of type, incarnation cross, and
+    profile (line pair). Adjust the field names to match your dataset.
     """
     return (row["type"], row["incarnation_cross"], row["profile_lines"])
 
