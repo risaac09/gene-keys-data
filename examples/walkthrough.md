@@ -1,6 +1,6 @@
 # walkthrough
 
-From clone to the join pattern in six short steps. The motivating analysis (Justin Taylor's regression against ~1M profiles, finding co-occurrence frequencies near .005 for chart-cross-profile triples) lives downstream of step 4. This walkthrough stops at the join.
+From clone to the join pattern in six short steps. The motivating analysis (a collaborator's regression against a large private profile dataset) lives downstream of step 4. This walkthrough stops at the join.
 
 ## 0. setup
 
@@ -77,7 +77,7 @@ top 10 by frequency:
   0.010000  ...
 ```
 
-A Counter over the (type, incarnation_cross, profile_lines) triple, divided by total. On 100 rows the top signature lands at .02 because the sample is small relative to the signature space. On the million-row dataset the baseline drops to .005 because the denominator outscales the numerator.
+A Counter over the (type, incarnation_cross, profile_lines) triple, divided by total. On 100 rows the top signature lands at .02 because the sample is small relative to the signature space. On a real dataset at scale the baseline drops by orders of magnitude because the denominator outscales the numerator.
 
 The skeleton stops here. The analysis begins on the next line.
 
@@ -112,7 +112,7 @@ for sig, obs in sorted(freqs.items(), key=lambda x: -x[1])[:10]:
     print(f"  obs={obs:.4f}  exp={exp:.4f}  ratio={ratio:.2f}  {sig}")
 ```
 
-Now you can see which signatures occur more (ratio > 1) or less (ratio < 1) than independence predicts. That's where the .005 finding becomes interpretable.
+Now you can see which signatures occur more (ratio > 1) or less (ratio < 1) than independence predicts. That's where a raw frequency becomes interpretable.
 
 ## 6. the viewer
 
