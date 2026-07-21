@@ -14,7 +14,7 @@ This repo holds the structure as data files, with JSON Schemas, in formats a dat
 
 People who want to do data work with the Gene Keys. Chart co-occurrence regressions, transit pattern studies, longitudinal hexagram tracking across a community, anything where the system needs to be data rather than prose.
 
-The repo exists because a conversation surfaced a regression on a roughly one-million-profile dataset that produced co-occurrence frequencies near .005 for chart-cross-profile triples. The work was done in private files. There was nowhere public to point at for someone else who wanted to run a similar analysis.
+The repo exists because a conversation surfaced co-occurrence work done against a private profile dataset, in private files, with nowhere public to point at for someone else who wanted to run a similar analysis.
 
 ## Quickstart
 
@@ -36,7 +36,7 @@ python -m http.server          # then visit http://localhost:8000/viewer/
 - `data/human-design.json` — the Human Design bodygraph wiring as structural fact: nine centers, each gate's center membership, and the 36 channels as gate pairs with their center pairs. Gate numbers are the shared King Wen numbering, so this joins `hexagrams.json` directly. Channel keynote names (Ra Uru Hu's published material) stay `null` pending canonical contribution, the same precedent as the hexagram `name` field.
 - `schemas/hexagram.schema.json` and `schemas/sequence.schema.json` — JSON Schemas. `examples/validate.py` runs schema + cross-entry invariant checks (id uniqueness, sphere-count match, position uniqueness) on every push and PR via GitHub Actions.
 - `examples/load_hexagrams.py` — minimal loader that prints fill-rate statistics.
-- `examples/cooccurrence_skeleton.py` — structural sketch of a chart co-occurrence frequency table. Reads `profiles.csv` and prints top signatures by frequency. Regression work that produced the .005 baseline lives downstream.
+- `examples/cooccurrence_skeleton.py` — structural sketch of a chart co-occurrence frequency table. Reads `profiles.csv` and prints top signatures by frequency. Regression work on real data lives downstream, in private files.
 - `examples/generate_demo_profiles.py` + `examples/demo_profiles.csv` — seeded synthetic 100-profile dataset so the skeleton runs out of the box. Not real chart data.
 - `examples/walkthrough.md` — clone-to-join walkthrough.
 - `viewer/index.html` — table view. Sortable, filterable, click any row for a detail panel.
