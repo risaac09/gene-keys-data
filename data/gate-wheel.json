@@ -1,0 +1,529 @@
+{
+  "id": "gate-wheel",
+  "description": "The 64 King Wen gates arranged around the tropical zodiac (the Human Design / Gene Keys mandala). Each gate occupies a 5.625 degree arc of ecliptic longitude; the wheel is anchored with gate 41 beginning at 2 degrees Aquarius (302 degrees) and runs in zodiacal order. The transiting Sun crossing a gate's arc is what activates that gene key. Gate numbers share the King Wen numbering with hexagrams.json, so this joins directly. startLongitude/endLongitude are tropical ecliptic longitude in degrees [0,360); sign and signDegree describe the sign the arc begins in (an arc may cross a sign boundary). Computing a chart from birth data stays downstream (Swiss Ephemeris); this file is the substrate the lookup reads.",
+  "zodiac": "tropical",
+  "gate_count": 64,
+  "anchor": {
+    "gate": 41,
+    "startLongitude": 302.0,
+    "sign": "Aquarius",
+    "signDegree": 2.0,
+    "degreesPerGate": 5.625,
+    "degreesPerLine": 0.9375,
+    "order": "zodiacal"
+  },
+  "gates": [
+    {
+      "gate": 41,
+      "wheelPosition": 0,
+      "startLongitude": 302.0,
+      "endLongitude": 307.625,
+      "sign": "Aquarius",
+      "signDegree": 2.0
+    },
+    {
+      "gate": 19,
+      "wheelPosition": 1,
+      "startLongitude": 307.625,
+      "endLongitude": 313.25,
+      "sign": "Aquarius",
+      "signDegree": 7.625
+    },
+    {
+      "gate": 13,
+      "wheelPosition": 2,
+      "startLongitude": 313.25,
+      "endLongitude": 318.875,
+      "sign": "Aquarius",
+      "signDegree": 13.25
+    },
+    {
+      "gate": 49,
+      "wheelPosition": 3,
+      "startLongitude": 318.875,
+      "endLongitude": 324.5,
+      "sign": "Aquarius",
+      "signDegree": 18.875
+    },
+    {
+      "gate": 30,
+      "wheelPosition": 4,
+      "startLongitude": 324.5,
+      "endLongitude": 330.125,
+      "sign": "Aquarius",
+      "signDegree": 24.5
+    },
+    {
+      "gate": 55,
+      "wheelPosition": 5,
+      "startLongitude": 330.125,
+      "endLongitude": 335.75,
+      "sign": "Pisces",
+      "signDegree": 0.125
+    },
+    {
+      "gate": 37,
+      "wheelPosition": 6,
+      "startLongitude": 335.75,
+      "endLongitude": 341.375,
+      "sign": "Pisces",
+      "signDegree": 5.75
+    },
+    {
+      "gate": 63,
+      "wheelPosition": 7,
+      "startLongitude": 341.375,
+      "endLongitude": 347.0,
+      "sign": "Pisces",
+      "signDegree": 11.375
+    },
+    {
+      "gate": 22,
+      "wheelPosition": 8,
+      "startLongitude": 347.0,
+      "endLongitude": 352.625,
+      "sign": "Pisces",
+      "signDegree": 17.0
+    },
+    {
+      "gate": 36,
+      "wheelPosition": 9,
+      "startLongitude": 352.625,
+      "endLongitude": 358.25,
+      "sign": "Pisces",
+      "signDegree": 22.625
+    },
+    {
+      "gate": 25,
+      "wheelPosition": 10,
+      "startLongitude": 358.25,
+      "endLongitude": 3.875,
+      "sign": "Pisces",
+      "signDegree": 28.25
+    },
+    {
+      "gate": 17,
+      "wheelPosition": 11,
+      "startLongitude": 3.875,
+      "endLongitude": 9.5,
+      "sign": "Aries",
+      "signDegree": 3.875
+    },
+    {
+      "gate": 21,
+      "wheelPosition": 12,
+      "startLongitude": 9.5,
+      "endLongitude": 15.125,
+      "sign": "Aries",
+      "signDegree": 9.5
+    },
+    {
+      "gate": 51,
+      "wheelPosition": 13,
+      "startLongitude": 15.125,
+      "endLongitude": 20.75,
+      "sign": "Aries",
+      "signDegree": 15.125
+    },
+    {
+      "gate": 42,
+      "wheelPosition": 14,
+      "startLongitude": 20.75,
+      "endLongitude": 26.375,
+      "sign": "Aries",
+      "signDegree": 20.75
+    },
+    {
+      "gate": 3,
+      "wheelPosition": 15,
+      "startLongitude": 26.375,
+      "endLongitude": 32.0,
+      "sign": "Aries",
+      "signDegree": 26.375
+    },
+    {
+      "gate": 27,
+      "wheelPosition": 16,
+      "startLongitude": 32.0,
+      "endLongitude": 37.625,
+      "sign": "Taurus",
+      "signDegree": 2.0
+    },
+    {
+      "gate": 24,
+      "wheelPosition": 17,
+      "startLongitude": 37.625,
+      "endLongitude": 43.25,
+      "sign": "Taurus",
+      "signDegree": 7.625
+    },
+    {
+      "gate": 2,
+      "wheelPosition": 18,
+      "startLongitude": 43.25,
+      "endLongitude": 48.875,
+      "sign": "Taurus",
+      "signDegree": 13.25
+    },
+    {
+      "gate": 23,
+      "wheelPosition": 19,
+      "startLongitude": 48.875,
+      "endLongitude": 54.5,
+      "sign": "Taurus",
+      "signDegree": 18.875
+    },
+    {
+      "gate": 8,
+      "wheelPosition": 20,
+      "startLongitude": 54.5,
+      "endLongitude": 60.125,
+      "sign": "Taurus",
+      "signDegree": 24.5
+    },
+    {
+      "gate": 20,
+      "wheelPosition": 21,
+      "startLongitude": 60.125,
+      "endLongitude": 65.75,
+      "sign": "Gemini",
+      "signDegree": 0.125
+    },
+    {
+      "gate": 16,
+      "wheelPosition": 22,
+      "startLongitude": 65.75,
+      "endLongitude": 71.375,
+      "sign": "Gemini",
+      "signDegree": 5.75
+    },
+    {
+      "gate": 35,
+      "wheelPosition": 23,
+      "startLongitude": 71.375,
+      "endLongitude": 77.0,
+      "sign": "Gemini",
+      "signDegree": 11.375
+    },
+    {
+      "gate": 45,
+      "wheelPosition": 24,
+      "startLongitude": 77.0,
+      "endLongitude": 82.625,
+      "sign": "Gemini",
+      "signDegree": 17.0
+    },
+    {
+      "gate": 12,
+      "wheelPosition": 25,
+      "startLongitude": 82.625,
+      "endLongitude": 88.25,
+      "sign": "Gemini",
+      "signDegree": 22.625
+    },
+    {
+      "gate": 15,
+      "wheelPosition": 26,
+      "startLongitude": 88.25,
+      "endLongitude": 93.875,
+      "sign": "Gemini",
+      "signDegree": 28.25
+    },
+    {
+      "gate": 52,
+      "wheelPosition": 27,
+      "startLongitude": 93.875,
+      "endLongitude": 99.5,
+      "sign": "Cancer",
+      "signDegree": 3.875
+    },
+    {
+      "gate": 39,
+      "wheelPosition": 28,
+      "startLongitude": 99.5,
+      "endLongitude": 105.125,
+      "sign": "Cancer",
+      "signDegree": 9.5
+    },
+    {
+      "gate": 53,
+      "wheelPosition": 29,
+      "startLongitude": 105.125,
+      "endLongitude": 110.75,
+      "sign": "Cancer",
+      "signDegree": 15.125
+    },
+    {
+      "gate": 62,
+      "wheelPosition": 30,
+      "startLongitude": 110.75,
+      "endLongitude": 116.375,
+      "sign": "Cancer",
+      "signDegree": 20.75
+    },
+    {
+      "gate": 56,
+      "wheelPosition": 31,
+      "startLongitude": 116.375,
+      "endLongitude": 122.0,
+      "sign": "Cancer",
+      "signDegree": 26.375
+    },
+    {
+      "gate": 31,
+      "wheelPosition": 32,
+      "startLongitude": 122.0,
+      "endLongitude": 127.625,
+      "sign": "Leo",
+      "signDegree": 2.0
+    },
+    {
+      "gate": 33,
+      "wheelPosition": 33,
+      "startLongitude": 127.625,
+      "endLongitude": 133.25,
+      "sign": "Leo",
+      "signDegree": 7.625
+    },
+    {
+      "gate": 7,
+      "wheelPosition": 34,
+      "startLongitude": 133.25,
+      "endLongitude": 138.875,
+      "sign": "Leo",
+      "signDegree": 13.25
+    },
+    {
+      "gate": 4,
+      "wheelPosition": 35,
+      "startLongitude": 138.875,
+      "endLongitude": 144.5,
+      "sign": "Leo",
+      "signDegree": 18.875
+    },
+    {
+      "gate": 29,
+      "wheelPosition": 36,
+      "startLongitude": 144.5,
+      "endLongitude": 150.125,
+      "sign": "Leo",
+      "signDegree": 24.5
+    },
+    {
+      "gate": 59,
+      "wheelPosition": 37,
+      "startLongitude": 150.125,
+      "endLongitude": 155.75,
+      "sign": "Virgo",
+      "signDegree": 0.125
+    },
+    {
+      "gate": 40,
+      "wheelPosition": 38,
+      "startLongitude": 155.75,
+      "endLongitude": 161.375,
+      "sign": "Virgo",
+      "signDegree": 5.75
+    },
+    {
+      "gate": 64,
+      "wheelPosition": 39,
+      "startLongitude": 161.375,
+      "endLongitude": 167.0,
+      "sign": "Virgo",
+      "signDegree": 11.375
+    },
+    {
+      "gate": 47,
+      "wheelPosition": 40,
+      "startLongitude": 167.0,
+      "endLongitude": 172.625,
+      "sign": "Virgo",
+      "signDegree": 17.0
+    },
+    {
+      "gate": 6,
+      "wheelPosition": 41,
+      "startLongitude": 172.625,
+      "endLongitude": 178.25,
+      "sign": "Virgo",
+      "signDegree": 22.625
+    },
+    {
+      "gate": 46,
+      "wheelPosition": 42,
+      "startLongitude": 178.25,
+      "endLongitude": 183.875,
+      "sign": "Virgo",
+      "signDegree": 28.25
+    },
+    {
+      "gate": 18,
+      "wheelPosition": 43,
+      "startLongitude": 183.875,
+      "endLongitude": 189.5,
+      "sign": "Libra",
+      "signDegree": 3.875
+    },
+    {
+      "gate": 48,
+      "wheelPosition": 44,
+      "startLongitude": 189.5,
+      "endLongitude": 195.125,
+      "sign": "Libra",
+      "signDegree": 9.5
+    },
+    {
+      "gate": 57,
+      "wheelPosition": 45,
+      "startLongitude": 195.125,
+      "endLongitude": 200.75,
+      "sign": "Libra",
+      "signDegree": 15.125
+    },
+    {
+      "gate": 32,
+      "wheelPosition": 46,
+      "startLongitude": 200.75,
+      "endLongitude": 206.375,
+      "sign": "Libra",
+      "signDegree": 20.75
+    },
+    {
+      "gate": 50,
+      "wheelPosition": 47,
+      "startLongitude": 206.375,
+      "endLongitude": 212.0,
+      "sign": "Libra",
+      "signDegree": 26.375
+    },
+    {
+      "gate": 28,
+      "wheelPosition": 48,
+      "startLongitude": 212.0,
+      "endLongitude": 217.625,
+      "sign": "Scorpio",
+      "signDegree": 2.0
+    },
+    {
+      "gate": 44,
+      "wheelPosition": 49,
+      "startLongitude": 217.625,
+      "endLongitude": 223.25,
+      "sign": "Scorpio",
+      "signDegree": 7.625
+    },
+    {
+      "gate": 1,
+      "wheelPosition": 50,
+      "startLongitude": 223.25,
+      "endLongitude": 228.875,
+      "sign": "Scorpio",
+      "signDegree": 13.25
+    },
+    {
+      "gate": 43,
+      "wheelPosition": 51,
+      "startLongitude": 228.875,
+      "endLongitude": 234.5,
+      "sign": "Scorpio",
+      "signDegree": 18.875
+    },
+    {
+      "gate": 14,
+      "wheelPosition": 52,
+      "startLongitude": 234.5,
+      "endLongitude": 240.125,
+      "sign": "Scorpio",
+      "signDegree": 24.5
+    },
+    {
+      "gate": 34,
+      "wheelPosition": 53,
+      "startLongitude": 240.125,
+      "endLongitude": 245.75,
+      "sign": "Sagittarius",
+      "signDegree": 0.125
+    },
+    {
+      "gate": 9,
+      "wheelPosition": 54,
+      "startLongitude": 245.75,
+      "endLongitude": 251.375,
+      "sign": "Sagittarius",
+      "signDegree": 5.75
+    },
+    {
+      "gate": 5,
+      "wheelPosition": 55,
+      "startLongitude": 251.375,
+      "endLongitude": 257.0,
+      "sign": "Sagittarius",
+      "signDegree": 11.375
+    },
+    {
+      "gate": 26,
+      "wheelPosition": 56,
+      "startLongitude": 257.0,
+      "endLongitude": 262.625,
+      "sign": "Sagittarius",
+      "signDegree": 17.0
+    },
+    {
+      "gate": 11,
+      "wheelPosition": 57,
+      "startLongitude": 262.625,
+      "endLongitude": 268.25,
+      "sign": "Sagittarius",
+      "signDegree": 22.625
+    },
+    {
+      "gate": 10,
+      "wheelPosition": 58,
+      "startLongitude": 268.25,
+      "endLongitude": 273.875,
+      "sign": "Sagittarius",
+      "signDegree": 28.25
+    },
+    {
+      "gate": 58,
+      "wheelPosition": 59,
+      "startLongitude": 273.875,
+      "endLongitude": 279.5,
+      "sign": "Capricorn",
+      "signDegree": 3.875
+    },
+    {
+      "gate": 38,
+      "wheelPosition": 60,
+      "startLongitude": 279.5,
+      "endLongitude": 285.125,
+      "sign": "Capricorn",
+      "signDegree": 9.5
+    },
+    {
+      "gate": 54,
+      "wheelPosition": 61,
+      "startLongitude": 285.125,
+      "endLongitude": 290.75,
+      "sign": "Capricorn",
+      "signDegree": 15.125
+    },
+    {
+      "gate": 61,
+      "wheelPosition": 62,
+      "startLongitude": 290.75,
+      "endLongitude": 296.375,
+      "sign": "Capricorn",
+      "signDegree": 20.75
+    },
+    {
+      "gate": 60,
+      "wheelPosition": 63,
+      "startLongitude": 296.375,
+      "endLongitude": 302.0,
+      "sign": "Capricorn",
+      "signDegree": 26.375
+    }
+  ]
+}
