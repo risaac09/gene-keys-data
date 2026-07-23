@@ -34,8 +34,10 @@ python -m http.server          # then visit http://localhost:8000/viewer/
 - `data/sequences/activation.json` — the four-sphere Activation Sequence (Life's Work, Evolution, Radiance, Purpose) with astronomical derivations.
 - `data/sequences/venus.json` + `data/sequences/pearl.json` — the Venus Sequence (five spheres) and Pearl Sequence (four spheres) with astronomical derivations, filled 2026-07-01 from Gene Keys Publishing's official derivation document (citation in `data/sequences/README.md`).
 - `data/human-design.json` — the Human Design bodygraph wiring as structural fact: nine centers, each gate's center membership, and the 36 channels as gate pairs with their center pairs. Gate numbers are the shared King Wen numbering, so this joins `hexagrams.json` directly. Channel keynote names (Ra Uru Hu's published material) stay `null` pending canonical contribution, the same precedent as the hexagram `name` field.
-- `schemas/hexagram.schema.json` and `schemas/sequence.schema.json` — JSON Schemas. `examples/validate.py` runs schema + cross-entry invariant checks (id uniqueness, sphere-count match, position uniqueness) on every push and PR via GitHub Actions.
+- `data/gate-wheel.json` — the 64 gates arranged around the tropical zodiac (the Human Design / Gene Keys mandala). Each gate holds a 5.625 degree arc of ecliptic longitude, anchored with gate 41 at 2 degrees Aquarius, in zodiacal order. This is what makes transits computable: the gate an ecliptic longitude falls in is a lookup, and the Sun crossing a gate's arc is what activates that gene key. Gate numbers share the King Wen numbering, so it joins `hexagrams.json` directly.
+- `schemas/hexagram.schema.json`, `schemas/sequence.schema.json`, `schemas/human-design.schema.json`, and `schemas/gate-wheel.schema.json` — JSON Schemas. `examples/validate.py` runs schema + cross-entry invariant checks (id uniqueness, sphere-count match, position uniqueness, gate partition, and the wheel's arc contiguity and anchor math) on every push and PR via GitHub Actions.
 - `examples/load_hexagrams.py` — minimal loader that prints fill-rate statistics.
+- `examples/gate_transit.py` — the wheel in use. `gate_of_longitude(lon)` is a pure lookup against `gate-wheel.json` returning the gate and line; a low-precision Sun-position helper is included so the example runs out of the box (`python examples/gate_transit.py` prints the gate the Sun is transiting now). Real chart computation stays downstream, see below.
 - `examples/cooccurrence_skeleton.py` — structural sketch of a chart co-occurrence frequency table. Reads `profiles.csv` and prints top signatures by frequency. Regression work on real data lives downstream, in private files.
 - `examples/generate_demo_profiles.py` + `examples/demo_profiles.csv` — seeded synthetic 100-profile dataset so the skeleton runs out of the box. Not real chart data.
 - `examples/walkthrough.md` — clone-to-join walkthrough.
@@ -48,7 +50,7 @@ python -m http.server          # then visit http://localhost:8000/viewer/
 ## What's not here
 
 - Rudd's text. The Shadow, Gift, and Siddhi descriptions are his work. This repo does not republish them.
-- Birth-chart computation. Calculating someone's spheres from their birth data is downstream of this dataset; Swiss Ephemeris and adjacent libraries handle that. This repo is the substrate.
+- Birth-chart computation. Calculating someone's spheres from their birth data is downstream of this dataset; Swiss Ephemeris and adjacent libraries handle that. This repo is the substrate. `gate_transit.py` carries a low-precision solar helper only to make the wheel lookup runnable, not as an ephemeris.
 - Personal profiles. The repo is for the system, not for individuals.
 
 ## v0 status

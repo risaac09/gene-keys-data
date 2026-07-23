@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/risaac09/gene-keys-data/schemas/gate-wheel.schema.json",
+  "title": "Gate wheel: the 64 gates on the tropical zodiac",
+  "description": "The King Wen gates arranged around the tropical zodiac (the Human Design / Gene Keys mandala) as structural fact. Each gate spans a 5.625 degree arc of ecliptic longitude; the wheel is anchored with gate 41 beginning at 2 degrees Aquarius. Gate numbers share the King Wen numbering with hexagrams.json. This schema describes the substrate; examples/validate.py enforces the partition and arc invariants.",
+  "type": "object",
+  "required": ["id", "description", "zodiac", "gate_count", "anchor", "gates"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "const": "gate-wheel"
+    },
+    "description": {
+      "type": "string"
+    },
+    "zodiac": {
+      "type": "string",
+      "const": "tropical"
+    },
+    "gate_count": {
+      "type": "integer",
+      "const": 64
+    },
+    "anchor": {
+      "type": "object",
+      "required": ["gate", "startLongitude", "sign", "signDegree", "degreesPerGate", "degreesPerLine", "order"],
+      "additionalProperties": false,
+      "properties": {
+        "gate": { "type": "integer", "const": 41 },
+        "startLongitude": { "type": "number", "const": 302.0 },
+        "sign": { "type": "string", "const": "Aquarius" },
+        "signDegree": { "type": "number", "const": 2.0 },
+        "degreesPerGate": { "type": "number", "const": 5.625 },
+        "degreesPerLine": { "type": "number", "const": 0.9375 },
+        "order": { "type": "string", "const": "zodiacal" }
+      },
+      "description": "The wheel anchor. Gate 41 begins the wheel at 2 degrees Aquarius (302 degrees ecliptic longitude); 5.625 degrees per gate, 0.9375 per line, running in zodiacal order. Matches profile.json computation.gateWheelAnchor in the downstream stack."
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 64,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "required": ["gate", "wheelPosition", "startLongitude", "endLongitude", "sign", "signDegree"],
+        "additionalProperties": false,
+        "properties": {
+          "gate": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 64,
+            "description": "King Wen gate number. Joins hexagrams.json on id. Every gate 1 to 64 appears exactly once; examples/validate.py enforces the partition."
+          },
+          "wheelPosition": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 63,
+            "description": "Position around the wheel from the anchor, 0 for gate 41."
+          },
+          "startLongitude": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMaximum": 360,
+            "description": "Tropical ecliptic longitude where the gate's arc begins, degrees."
+          },
+          "endLongitude": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMaximum": 360,
+            "description": "Tropical ecliptic longitude where the gate's arc ends, degrees. Equals startLongitude + 5.625 (mod 360). An arc may wrap 360 (e.g. gate 25)."
+          },
+          "sign": {
+            "enum": ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"],
+            "description": "The zodiac sign the arc begins in. An arc can cross a sign boundary, so the sign of endLongitude may differ."
+          },
+          "signDegree": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMaximum": 30,
+            "description": "Degree within the sign where the arc begins."
+          }
+        }
+      }
+    }
+  }
+}
