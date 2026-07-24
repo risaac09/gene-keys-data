@@ -1,19 +1,31 @@
-"""Which gate is a given ecliptic longitude in, and which gate is the Sun transiting.
+"""Which gate is a given ecliptic longitude in, and which gate is a body transiting.
 
 The dataset's job is the wheel: data/gate-wheel.json maps each King Wen gate to its
 arc of tropical ecliptic longitude. The core function here, gate_of_longitude(lon),
 is a pure lookup against that file. Given any longitude it returns the gate and line.
+
+The lookup is body-agnostic and so is the wheel. Nothing in either is solar. Hand it
+the longitude of the Moon, of Venus, of Jupiter, of anything that moves along the
+ecliptic, and it answers the same way. The Sun gets the worked example here only
+because its position is the one you can compute without an ephemeris. The sequence
+files (data/sequences/*.json) name six bodies across two chart moments, so the
+six-body reading is what the dataset already describes.
 
 Computing a chart from birth data stays downstream of this repo (Swiss Ephemeris and
 adjacent libraries), as the README says. The sun_longitude() helper below is a
 low-precision convenience (Meeus' simplified solar position, good to about 0.01 degree)
 so the example runs out of the box; each gate arc is 5.625 degrees wide, so that
 precision resolves the gate and line without an ephemeris dependency. For anything
-that needs arc-second accuracy, swap it for a real ephemeris.
+that needs arc-second accuracy, or for any body other than the Sun, use a real
+ephemeris and pass its longitude to gate_of_longitude().
+
+For the intervals a body spends inside a gate rather than a single instant, see
+gate_windows.py, which builds on this lookup and stays ephemeris-free the same way.
 
 Run from the project root:
     python examples/gate_transit.py                 # the gate the Sun is in now (UTC)
     python examples/gate_transit.py 2026-03-22T15:10:00Z
+    python examples/gate_transit.py --selftest
 """
 import json
 import math
