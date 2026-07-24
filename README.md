@@ -51,6 +51,7 @@ python -m http.server          # then visit http://localhost:8000/viewer/
 
 - Rudd's text. The Shadow, Gift, and Siddhi descriptions are his work. This repo does not republish them.
 - Birth-chart computation. Calculating someone's spheres from their birth data is downstream of this dataset; Swiss Ephemeris and adjacent libraries handle that. This repo is the substrate. `gate_transit.py` carries a low-precision solar helper only to make the wheel lookup runnable, not as an ephemeris.
+- Personal birth data. No chart, no birth moment, no individual belongs in this repo, including in a test fixture. `CONTRIBUTING.md` says so and the selftests hold to it: `gate_transit.py` checks the wheel's anchor, all 64 arc midpoints, the six line divisions, and the solar series against the J2000.0 epoch.
 - Personal profiles. The repo is for the system, not for individuals.
 
 ## v0 status

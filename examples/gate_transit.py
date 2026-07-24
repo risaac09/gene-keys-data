@@ -13,7 +13,7 @@ that needs arc-second accuracy, swap it for a real ephemeris.
 
 Run from the project root:
     python examples/gate_transit.py                 # the gate the Sun is in now (UTC)
-    python examples/gate_transit.py 2000-01-01T12:00:00Z
+    python examples/gate_transit.py 2026-03-22T15:10:00Z
 """
 import json
 import math
@@ -62,16 +62,46 @@ def sun_longitude(dt):
 
 
 def _selftest():
+    """Check the lookup against the wheel's own invariants.
+
+    Everything here is a fact about the structure, so no birth chart is needed and
+    none is used. CONTRIBUTING.md rules personal birth-chart data out of this repo,
+    and a fixture built from someone's chart would be exactly that; the wheel's
+    anchor and arc arithmetic make a stronger check anyway, because they test all
+    64 gates instead of one.
+    """
     wheel = load_wheel()
-    # A synthetic reference instant lands the
-    # personality Sun in gate 25 line 5, a fixed check that the wheel + formula agree.
-    birth = datetime(2000, 1, 1, 12, 0, tzinfo=timezone.utc)
-    gate, line = gate_of_longitude(sun_longitude(birth), wheel)
-    assert (gate, line) == (25, 5), f"selftest failed: got {gate}/{line}, expected 25/5"
-    # Design Sun, 88 degrees of solar arc earlier, lands in gate 58 line 1.
-    design = datetime(1999, 10, 4, 12, 0, tzinfo=timezone.utc)
-    assert gate_of_longitude(sun_longitude(design), wheel)[0] == 58
-    print("selftest OK (birth Sun -> gate 25 line 5)")
+    anchor = wheel["anchor"]
+
+    # 1. The anchor lands where the file says: gate 41 opens at 2 Aquarius.
+    start = anchor["startLongitude"]
+    assert gate_of_longitude(start, wheel) == (anchor["gate"], 1), "anchor is off"
+    # A hair before the anchor belongs to the last gate on the wheel, not the first.
+    assert gate_of_longitude(start - 0.001, wheel)[0] == wheel["gates"][-1]["gate"]
+
+    # 2. Every gate's arc midpoint maps back to that gate. 64 for 64, or the wheel
+    #    and the lookup disagree somewhere around the circle.
+    half = anchor["degreesPerGate"] / 2
+    for g in wheel["gates"]:
+        mid = (g["startLongitude"] + half) % 360.0
+        got = gate_of_longitude(mid, wheel)[0]
+        assert got == g["gate"], f"midpoint of gate {g['gate']} resolved to {got}"
+
+    # 3. The six lines divide one gate evenly, in order.
+    per_line = anchor["degreesPerLine"]
+    for k in range(6):
+        lon = start + per_line * k + per_line / 2
+        assert gate_of_longitude(lon, wheel) == (anchor["gate"], k + 1)
+
+    # 4. The solar helper agrees with its own reference epoch. At J2000.0
+    #    (2000-01-01 12:00 UTC) Meeus' simplified series puts the Sun at about
+    #    280.376 degrees. This pins the formula, not the wheel.
+    j2000 = datetime(2000, 1, 1, 12, 0, tzinfo=timezone.utc)
+    lon = sun_longitude(j2000)
+    assert abs(lon - 280.376) < 0.01, f"J2000 solar longitude drifted: {lon:.4f}"
+
+    print(f"selftest OK (anchor, all {len(wheel['gates'])} gate midpoints, "
+          f"6 lines, J2000 solar reference)")
 
 
 def main(argv):
