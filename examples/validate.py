@@ -108,6 +108,30 @@ def gate_wheel_joins_hexagrams(doc):
     return f"gates with no hexagram row: {orphans}" if orphans else None
 
 
+def gate_wheel_partners_opposite(doc):
+    """The wheel's geometry and the hexagram pairing state the same fact.
+
+    A gate's programming partner (hexagrams.json, the line-inverted hexagram,
+    cross-checked against the published pair list) sits exactly opposite it on
+    the wheel, 32 positions away, 180 degrees of ecliptic longitude. Two
+    independent files, one from hexagram structure and one from zodiac
+    geometry, agreeing on all 64 pairings is a strong join check, and it means
+    the opposition relation in transit work IS the programming-partner axis.
+    Skipped quietly for any gate whose partner field is still null.
+    """
+    with (DATA / "hexagrams.json").open() as f:
+        partner = {h["id"]: h.get("programming_partner_id") for h in json.load(f)}
+    order = [g["gate"] for g in sorted(doc["gates"], key=lambda g: g["wheelPosition"])]
+    idx = {g: i for i, g in enumerate(order)}
+    bad = [(g, order[(idx[g] + 32) % 64], partner[g])
+           for g in order
+           if partner.get(g) is not None and partner[g] != order[(idx[g] + 32) % 64]]
+    if bad:
+        return ("programming partner != wheel opposite: " +
+                ", ".join(f"gate {g} opposite {o} partner {p}" for g, o, p in bad[:5]))
+    return None
+
+
 def validate_array(data_path, schema_path, invariants=()):
     with data_path.open() as f:
         data = json.load(f)
@@ -188,7 +212,8 @@ def main():
         (
             DATA / "gate-wheel.json",
             SCHEMAS / "gate-wheel.schema.json",
-            [gate_wheel_partition, gate_wheel_arcs, gate_wheel_joins_hexagrams],
+            [gate_wheel_partition, gate_wheel_arcs, gate_wheel_joins_hexagrams,
+             gate_wheel_partners_opposite],
         )
     )
     results = [validate_array(d, s, inv) for d, s, inv in array_targets]
