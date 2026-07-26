@@ -48,11 +48,24 @@ python -m http.server          # then visit http://localhost:8000/viewer/
 - `viewer/graph.html` — 8×8 lattice with toggle overlays for programming partners, codon rings, and the King Wen sequence path.
 - `viewer/calculator.html` — in-browser co-occurrence frequency tool. Paste a CSV (or load the sample), see the long-tail distribution and the expected uniform baseline.
 - The four viewer pages share top navigation. Single-file vanilla JS, no build step.
+- `app/` — the transit explorer, an installable PWA built on this dataset. See below.
+
+## The app
+
+`app/` is a client-side transit explorer over the dataset: enter a birth moment, see the Golden Path spheres structurally (gate and line by number, joined from `data/sequences/*.json`), watch the Sun's annual windows and the slow outer-body seasons over those gates, and export the recommended cut as calendar events. Vanilla JS, no build step, installable, fully offline after first load. Serve the repo root and visit `/app/`; `app/selftest.html` is its correctness gate, the JS sibling of the Python `--selftest` suites.
+
+What it computes: natal positions at the birth instant and at the design moment (the Sun 88 degrees of solar arc earlier), the sphere join, transit windows with bisected boundaries and retrograde passages grouped, coverage arithmetic. Three of those are faithful ports, cross-validated against their Python originals: the wheel lookup (`examples/gate_transit.py`), transit windows (`gate_windows.py`), and slow seasons (`slow_seasons.py`). The design-moment solver, the true-node computation, and wall-clock-to-UTC timezone conversion have no Python counterpart here; they are new code, and `app/selftest.html` is what covers them. Positions come from a vendored ephemeris (`astronomy-engine`, MIT, `app/vendor/astronomy-engine/`).
+
+What it refuses to compute: meaning. The app shows numbers, lines, spheres, partners, and tempo, and links to genekeys.com for Rudd's material. No Shadow, Gift, or Siddhi text or names appear anywhere in it.
+
+Privacy: birth data never leaves the device. All computation is client-side; there is no server, no account, no analytics, and no telemetry. Nothing is sent anywhere on its own: no network call after first load. The one exception is opt-in and per-event, the Google Calendar links in the export preview, which open only when clicked and carry that event's text in the URL. State lives in localStorage with JSON export and import.
+
+IP: the app carries the same guardrail as the dataset. Gene keys are referenced by number only. The city list for timezone lookup is a vendored GeoNames extract (CC BY 4.0, attribution in `app/vendor/cities/`).
 
 ## What's not here
 
 - Rudd's text. The Shadow, Gift, and Siddhi descriptions are his work. This repo does not republish them.
-- Birth-chart computation. Calculating someone's spheres from their birth data is downstream of this dataset; Swiss Ephemeris and adjacent libraries handle that. This repo is the substrate. `gate_transit.py` carries a low-precision solar helper only to make the wheel lookup runnable, not as an ephemeris. `gate_windows.py` carries none at all: it takes positions from the caller.
+- Birth-chart computation in the dataset. `data/` and `examples/` stay ephemeris-free: `gate_transit.py` carries a low-precision solar helper only to make the wheel lookup runnable, and `gate_windows.py` takes positions from the caller. Chart computation lives in exactly one place, the client-side `app/`, which vendors its own ephemeris; anything beyond it (arc-second work, research pipelines) belongs downstream with Swiss Ephemeris or equivalent.
 - Personal birth data. No chart, no birth moment, no individual belongs in this repo, including in a test fixture. `CONTRIBUTING.md` says so and the selftests hold to it: `gate_transit.py` checks the wheel's anchor, all 64 arc midpoints, the six line divisions, and the solar series against the J2000.0 epoch, while `gate_windows.py` checks synthetic bodies with known motion.
 - Personal profiles. The repo is for the system, not for individuals.
 

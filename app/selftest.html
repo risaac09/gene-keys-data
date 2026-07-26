@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gene-keys-data — app selftest</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<header>
+  <h1>gene-keys-data — app selftest</h1>
+  <p>The app's correctness gate, in the browser it runs in. <a href="../README.md">README</a></p>
+  <nav>
+    <a href="../viewer/">table</a>
+    <a href="../viewer/wheel.html">wheel</a>
+    <a href="../viewer/graph.html">graph</a>
+    <a href="../viewer/calculator.html">calculator</a>
+    <a href="./">app</a>
+    <a href="selftest.html" class="active">selftest</a>
+  </nav>
+</header>
+
+<div class="intro">
+  <p>Every case here checks a structural invariant, a ported algorithm against its Python source, or an app concern like calendar folding and timezone conversion. All instants are synthetic or astronomical epochs. No birth data is used, stored, or needed.</p>
+</div>
+
+<div id="summary" class="notice">Running…</div>
+<table>
+  <thead><tr><th>Case</th><th>Result</th><th>Detail</th></tr></thead>
+  <tbody id="results"></tbody>
+</table>
+
+<footer>
+  Cross-validation values pinned from <code>python examples/gate_transit.py</code> at commit 09d9086.
+</footer>
+
+<script src="vendor/astronomy-engine/astronomy.browser.min.js"></script>
+<script type="module">
+  import { buildCases } from "./js/selftest.js";
+
+  const tbody = document.getElementById("results");
+  const summary = document.getElementById("summary");
+
+  function row(name, ok, detail) {
+    const tr = document.createElement("tr");
+    const cells = [name, ok ? "pass" : "FAIL", detail];
+    cells.forEach((text, i) => {
+      const td = document.createElement("td");
+      td.textContent = text;
+      if (i === 1) td.className = ok ? "pass" : "fail";
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  }
+
+  async function main() {
+    let wheelDoc, hexagrams;
+    try {
+      const [w, h] = await Promise.all([
+        fetch("../data/gate-wheel.json"), fetch("../data/hexagrams.json"),
+      ]);
+      if (!w.ok || !h.ok) throw new Error(`HTTP ${w.status}/${h.status}`);
+      wheelDoc = await w.json();
+      hexagrams = await h.json();
+    } catch (e) {
+      summary.innerHTML = "";
+      const div = document.createElement("div");
+      div.className = "error";
+      div.textContent = `Could not load data: ${e.message}. Run python -m http.server from the project root and visit /app/selftest.html.`;
+      summary.appendChild(div);
+      return;
+    }
+
+    let pass = 0, fail = 0;
+    for (const c of buildCases(wheelDoc, hexagrams)) {
+      try {
+        const detail = c.run();
+        row(c.name, true, detail);
+        pass++;
+      } catch (e) {
+        row(c.name, false, e.message);
+        fail++;
+        console.error(`selftest ${c.id}:`, e);
+      }
+    }
+    summary.textContent = fail === 0
+      ? `All ${pass} cases pass.`
+      : `${fail} of ${pass + fail} cases FAIL.`;
+    summary.className = fail === 0 ? "notice pass" : "error";
+  }
+
+  main();
+</script>
+</body>
+</html>
