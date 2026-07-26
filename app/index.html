@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gene-keys-data — app</title>
+<link rel="stylesheet" href="css/app.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#fafaf7">
+</head>
+<body>
+<header>
+  <h1>gene-keys-data — app</h1>
+  <p id="stance">This app tracks when, not what.</p>
+  <nav>
+    <a href="../viewer/">table</a>
+    <a href="../viewer/wheel.html">wheel</a>
+    <a href="../viewer/graph.html">graph</a>
+    <a href="../viewer/calculator.html">calculator</a>
+    <a href="./" class="active">app</a>
+  </nav>
+</header>
+
+<main id="main">
+  <div id="banners"></div>
+  <div id="chart-strip" style="display:none"></div>
+  <div id="tabs" class="tabs" style="display:none"></div>
+  <div id="view"><div class="empty">Loading…</div></div>
+</main>
+
+<div id="backdrop" class="backdrop"></div>
+<aside id="edit-panel" class="panel"></aside>
+
+<footer>
+  <p>The app explains tempo, not meaning: it says when and how long. What each gene key means stays with Richard Rudd's material at <a href="https://genekeys.com" target="_blank" rel="noopener">genekeys.com</a>.</p>
+  <p>Your birth data stays in this browser. Nothing is sent anywhere. No analytics, no server. Structural data from this repo; ephemeris: astronomy-engine (MIT); city list: GeoNames (CC BY 4.0). <a href="selftest.html">selftest</a></p>
+</footer>
+
+<script src="vendor/astronomy-engine/astronomy.browser.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -39,8 +39,8 @@ Each entry in `data/hexagrams.json` has these fields. Status of each:
 ## What does not belong in PRs
 
 - Shadow, Gift, or Siddhi text descriptions. That is Rudd's IP.
-- Personal birth-chart data. The repo is for the system; individual charts go elsewhere.
-- Astrological computation code. Use Swiss Ephemeris or equivalent in a separate project.
+- Personal birth-chart data. The repo is for the system; individual charts go elsewhere. This covers `app/` too: no real birth moment belongs in its code, fixtures, tests, or screenshots.
+- Astrological computation code in `data/` or `examples/`. The dataset stays ephemeris-free; `examples/` takes positions from the caller. The one sanctioned computation surface is the client-side app under `app/`, which vendors its own ephemeris and never writes back into the dataset.
 
 ## Adding new data files
 
