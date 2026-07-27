@@ -3,7 +3,7 @@
 // second load after the deploy. All paths are relative so the app works under
 // the GitHub Pages project prefix.
 
-const VERSION = "gk-app-v2";
+const VERSION = "gk-app-v3";
 
 const PRECACHE = [
   "./",
@@ -21,6 +21,7 @@ const PRECACHE = [
   "./js/tz.js",
   "./js/cities.js",
   "./js/fmt.js",
+  "./js/now.js",
   "./js/ics.js",
   "./js/gcal.js",
   "./js/export.js",

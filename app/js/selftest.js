@@ -10,6 +10,7 @@ import {
 import { designMoment, parseDerivation } from "./engine/chart.js";
 import { maxStep, gateWindows, groupPassages } from "./engine/windows.js";
 import { meanDwell, coverage } from "./engine/seasons.js";
+import { makeNowStates } from "./now.js";
 import * as ICS from "./ics.js";
 import { buildCut } from "./export.js";
 import { zonedToUtc, offsetToUtc } from "./tz.js";
@@ -375,6 +376,43 @@ export function buildCases(wheelDoc, hexagrams) {
         assert(boundaries[0].SUMMARY.includes("its own natal gate too"),
           "kind 'both' should be phrased, not silently dropped");
         return "Feb 29 anchor shifted, DTEND kept, clamped end suppressed, 'both' phrased";
+      },
+    },
+    {
+      id: "now-cache",
+      name: "The Now cache holds the exit search, never the line",
+      run() {
+        // A synthetic body at one gate per day, so a line lasts four hours and
+        // the gate lasts a day. Caching the position alongside the exit instant
+        // latched the line for the whole dwell; this pins the split.
+        let clock = EPOCH;
+        const lonOf = () => ramp(width, start);
+        const states = makeNowStates(wheel, ["Sun"], lonOf, () => clock);
+
+        const first = states();
+        assert(first.length === 2, `Sun plus its Earth alias, got ${first.length}`);
+        assert(first[0].gate === wheel.anchorGate && first[0].line === 1,
+          `entry position ${first[0].gate}.${first[0].line}`);
+        assert(first[1].body === "Earth" && first[1].alias === "mirrors the Sun",
+          "the alias row is missing or unlabelled");
+        assert(first[1].exitMs === first[0].exitMs, "the alias shares the Sun's exit");
+        approx(first[0].exitMs, EPOCH + DAY, 2 * MIN, "exit instant");
+
+        // Two fifths of the way through the gate: the line has moved on twice,
+        // the gate has not moved at all.
+        clock = EPOCH + 0.4 * DAY;
+        const mid = states();
+        assert(mid[0].gate === wheel.anchorGate, `gate drifted to ${mid[0].gate}`);
+        assert(mid[0].line === 3, `line should track inside the gate, got ${mid[0].line}`);
+        assert(mid[0].exitMs === first[0].exitMs, "the exit search should not have re-run");
+
+        // Past the exit: the gate advances and the search runs again.
+        clock = EPOCH + 1.4 * DAY;
+        const next = states();
+        assert(next[0].gate === wheel.order[1], `gate should be the next one, got ${next[0].gate}`);
+        assert(next[0].line === 3, `line in the new gate, got ${next[0].line}`);
+        approx(next[0].exitMs, EPOCH + 2 * DAY, 2 * MIN, "exit instant after the crossing");
+        return "line tracks inside the gate, exit search cached until the crossing";
       },
     },
     {

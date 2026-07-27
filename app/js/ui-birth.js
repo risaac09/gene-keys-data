@@ -4,7 +4,7 @@
 import { loadCities, searchCities, cityLabel } from "./cities.js";
 import { zonedToUtc, offsetToUtc, ianaZones } from "./tz.js";
 import { utcStamp } from "./fmt.js";
-import { el } from "./dom.js";
+import { el, labelFor } from "./dom.js";
 
 // The date input's floor: the design moment needs about 100 days of ephemeris
 // behind the birth instant, so the usable range starts later than 1900-01-01.
@@ -211,24 +211,24 @@ export function renderBirthForm(container, { existing, timeSensitiveNote, onSave
     onSave({ ...pending.birth, utcMs });
   });
   confirmBox.append(utcLine, el("div", { class: "field-grid" },
-    el("div", {}, el("label", {}, "Birth instant, UTC"), utcField)),
+    el("div", {}, labelFor(utcField, "Birth instant, UTC"), utcField)),
     calcBtn);
 
   container.append(
     el("p", { class: "notice" },
       "Your birth data stays in this browser. Nothing is sent anywhere. No analytics, no server."),
     el("div", { class: "field-grid" },
-      el("div", {}, el("label", {}, "Birth date"), dateInput),
-      el("div", {}, el("label", {}, "Local time"), timeInput),
-      el("div", {}, el("label", {}, "Time unknown"), unknownTime),
+      el("div", {}, labelFor(dateInput, "Birth date"), dateInput),
+      el("div", {}, labelFor(timeInput, "Local time"), timeInput),
+      el("div", {}, labelFor(unknownTime, "Time unknown"), unknownTime),
     ),
     el("div", { class: "field-grid" },
-      el("div", { class: "suggest" }, el("label", {}, "Place"), cityInput, suggest),
-      el("div", {}, el("label", {}, "Timezone (always overridable)"), tzSelect),
+      el("div", { class: "suggest" }, labelFor(cityInput, "Place"), cityInput, suggest),
+      el("div", {}, labelFor(tzSelect, "Timezone (always overridable)"), tzSelect),
     ),
     el("details", {},
       el("summary", {}, "Timezone not listed or historically wrong? Enter a fixed UTC offset."),
-      el("div", { style: "margin-top:0.5rem" }, el("label", {}, "UTC offset"), offsetInput)),
+      el("div", { style: "margin-top:0.5rem" }, labelFor(offsetInput, "UTC offset"), offsetInput)),
     el("p", { class: "notice" }, "Place sets the timezone and nothing else. City list: GeoNames, CC BY 4.0."),
     el("div", { class: "toolbar", style: "margin-top:0.75rem" }, showBtn),
     warnings,

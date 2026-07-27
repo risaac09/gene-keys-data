@@ -3,7 +3,7 @@
 
 import { sunSummary, partnerPhrase, buildCut } from "./export.js";
 import { dayStamp, timeLeft } from "./fmt.js";
-import { el } from "./dom.js";
+import { el, download } from "./dom.js";
 
 export function renderRhythm(container, ctx) {
   container.innerHTML = "";
@@ -32,12 +32,7 @@ export function renderRhythm(container, ctx) {
         host: location.host || "localhost",
         nowMs,
       });
-      const blob = new Blob([ics], { type: "text/calendar" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "gene-keys-rhythm.ics";
-      a.click();
-      URL.revokeObjectURL(a.href);
+      download(ics, "text/calendar", "gene-keys-rhythm.ics");
 
       preview.innerHTML = "";
       preview.append(el("h3", {}, "What the file holds"));

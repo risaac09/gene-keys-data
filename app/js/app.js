@@ -1,15 +1,14 @@
 // Boot, verification, routing, and the computation context the views share.
 
-import { loadWheel, gateOfLongitude, partnerOf } from "./engine/wheel.js";
+import { loadWheel } from "./engine/wheel.js";
 import {
-  bodyLongitude, longitudeFn, verifyEphemeris, TRANSIT_BODIES,
+  longitudeFn, verifyEphemeris, TRANSIT_BODIES,
   DATE_MIN_MS, DATE_MAX_MS,
 } from "./engine/astro.js";
 import { natalChart, sphereJoin, sphereGates, DESIGN_LOOKBACK_MS } from "./engine/chart.js";
-import {
-  gateWindows, groupPassages, nextGateChange, SAMPLING_STEP_MS, GROUP_GAP_MS,
-} from "./engine/windows.js";
+import { gateWindows, SAMPLING_STEP_MS, GROUP_GAP_MS } from "./engine/windows.js";
 import { coverage, SLOW_BODIES } from "./engine/seasons.js";
+import { makeNowStates } from "./now.js";
 import * as Store from "./store.js";
 import { renderBirthForm } from "./ui-birth.js";
 import { renderRhythm } from "./ui-rhythm.js";
@@ -17,6 +16,7 @@ import { renderSeasons } from "./ui-seasons.js";
 import { renderExplore } from "./ui-explore.js";
 import { renderNow } from "./ui-now.js";
 import { percent } from "./fmt.js";
+import { download } from "./dom.js";
 
 const DAY = 86400000;
 const YEAR = 365.25 * DAY;
@@ -120,7 +120,6 @@ function buildCtx() {
   const gates = sphereGates(spheres);
   const gateSet = new Set(gates);
   const cache = {};
-  const nowCache = new Map();
 
   const stale = (entry) => !entry || Date.now() - entry.builtAt > CACHE_TTL_MS;
 
@@ -200,35 +199,8 @@ function buildCtx() {
       return windows.filter((w) => w.end >= now);
     },
 
-    nowStates() {
-      // A body's gate and line cannot change before its own exit instant, so
-      // the minute timer only has to recompute the bodies that have crossed.
-      // A null exit means no change within the search horizon: also stable.
-      const now = Date.now();
-      const out = [];
-      for (const body of TRANSIT_BODIES) {
-        let entry = nowCache.get(body);
-        if (!entry || (entry.exitMs !== null && now >= entry.exitMs)) {
-          const lon = bodyLongitude(body, now);
-          const { gate, line } = gateOfLongitude(lon, wheel);
-          const exitMs = nextGateChange(longitudeFn(body), wheel, now, SAMPLING_STEP_MS[body]);
-          entry = { rows: [{ body, gate, line, exitMs }], exitMs };
-          if (body === "Sun" || body === "TrueNode") {
-            // The alias sits 180 degrees away, so it leaves its gate at the
-            // same instant and never needs its own exit search.
-            const alias = body === "Sun" ? "Earth" : "SouthNode";
-            const a = gateOfLongitude(bodyLongitude(alias, now), wheel);
-            entry.rows.push({
-              body: alias, gate: a.gate, line: a.line, exitMs,
-              alias: body === "Sun" ? "mirrors the Sun" : "mirrors the North Node",
-            });
-          }
-          nowCache.set(body, entry);
-        }
-        out.push(...entry.rows);
-      }
-      return out;
-    },
+    // Caches the exit search only; gate and line come fresh on every tick.
+    nowStates: makeNowStates(wheel, TRANSIT_BODIES, longitudeFn),
   };
 }
 
@@ -388,12 +360,7 @@ function openPanel() {
   exportBtn.className = "btn";
   exportBtn.textContent = "Export JSON";
   exportBtn.addEventListener("click", () => {
-    const blob = new Blob([Store.exportJSON(state)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "gene-keys-data-export.json";
-    a.click();
-    URL.revokeObjectURL(a.href);
+    download(Store.exportJSON(state), "application/json", "gene-keys-data-export.json");
   });
   const importInput = document.createElement("input");
   importInput.type = "file";

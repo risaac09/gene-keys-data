@@ -5,7 +5,7 @@ import { BODY_LABELS } from "./export.js";
 import { partnerOf } from "./engine/wheel.js";
 import { TRANSIT_BODIES } from "./engine/astro.js";
 import { utcStamp, localStamp, percent, contactsPhrase } from "./fmt.js";
-import { el } from "./dom.js";
+import { el, labelFor } from "./dom.js";
 
 export function renderExplore(container, ctx) {
   container.innerHTML = "";
@@ -23,11 +23,15 @@ export function renderExplore(container, ctx) {
   for (const g of [...ctx.gates].sort((a, b) => a - b)) {
     mine.append(el("option", { value: g }, `gate ${g}`));
   }
-  const rest = el("optgroup", { label: "All 64" });
+  // The second group is the complement, not all 64: listing a sphere gate in
+  // both puts the same value in the select twice.
+  const rest = el("optgroup", { label: "The other gates" });
   for (let g = 1; g <= 64; g++) {
+    if (ctx.gates.has(g)) continue;
     rest.append(el("option", { value: g }, `gate ${g}`));
   }
-  gateSelect.append(mine, rest);
+  gateSelect.append(mine);
+  if (rest.childElementCount) gateSelect.append(rest);
 
   const partnerToggle = el("input", { type: "checkbox" });
   const runBtn = el("button", { class: "btn primary" }, "Compute windows");
@@ -65,9 +69,10 @@ export function renderExplore(container, ctx) {
 
   container.append(
     el("div", { class: "field-grid" },
-      el("div", {}, el("label", {}, "Body"), bodySelect),
-      el("div", {}, el("label", {}, "Gate"), gateSelect),
-      el("div", {}, el("label", {}, "Include partner axis"), partnerToggle),
-      el("div", {}, el("label", {}, " "), runBtn)),
+      el("div", {}, labelFor(bodySelect, "Body"), bodySelect),
+      el("div", {}, labelFor(gateSelect, "Gate"), gateSelect),
+      el("div", {}, labelFor(partnerToggle, "Include partner axis"), partnerToggle),
+      // The button labels itself; the spacer keeps it on the grid's baseline.
+      el("div", {}, el("div", { class: "label-spacer" }), runBtn)),
     results);
 }

@@ -64,6 +64,10 @@ input[type="text"], input[type="date"], input[type="time"], input[type="datetime
 }
 input:focus, select:focus { outline: 2px solid var(--ochre); outline-offset: -1px; border-color: var(--ochre); }
 label { font-size: 0.8rem; color: var(--muted); display: block; margin-bottom: 0.25rem; }
+/* Reserves a label's box so a self-labelling control still sits on the grid's
+   baseline. The zero-width space gives the empty div its line height. */
+.label-spacer { font-size: 0.8rem; line-height: 1.5; margin-bottom: 0.25rem; }
+.label-spacer::after { content: "\200b"; }
 
 table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: white; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
 th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--rule); }
