@@ -17,7 +17,7 @@ Each entry in `data/hexagrams.json` has these fields. Status of each:
 | `name` | not accepted without Gene Keys Publishing's blessing (see below) |
 | `codon` | needs canonical fill |
 | `amino_acid` | needs canonical fill |
-| `programming_partner_id` | needs canonical fill |
+| `programming_partner_id` | filled (line-inverted opposite, cross-checked against the published pair list, 2026-07-01) |
 | `codon_ring_id` | needs canonical fill |
 
 ## Source guidance
