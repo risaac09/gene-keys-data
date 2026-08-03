@@ -16,6 +16,8 @@ export function el(tag, attrs = {}, ...children) {
 
 let uid = 0;
 
+export const DOWNLOAD_REVOKE_DELAY_MS = 60 * 1000;
+
 export function labelFor(control, text) {
   // A label needs `for` or it needs to wrap its control; a bare sibling leaves
   // the field unnamed to a screen reader and dead to a tap on its own label.
@@ -25,16 +27,30 @@ export function labelFor(control, text) {
   return el("label", { for: control.id }, text);
 }
 
-export function download(text, mime, filename) {
-  // The anchor joins the document and the object URL outlives the click by a
-  // turn. Revoking on the statement after click() races the browser's own read
-  // of the blob, and a lost race is a download that silently never happens.
-  const url = URL.createObjectURL(new Blob([text], { type: mime }));
-  const a = el("a", { href: url, download: filename, style: "display:none" });
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => {
-    a.remove();
-    URL.revokeObjectURL(url);
-  }, 0);
+export function download(text, mime, filename, {
+  createObjectURL = (blob) => URL.createObjectURL(blob),
+  revokeObjectURL = (url) => URL.revokeObjectURL(url),
+  schedule = (fn, delay) => setTimeout(fn, delay),
+  click = (anchor) => anchor.click(),
+} = {}) {
+  // Keep the object URL alive well past the click task. Some browsers do not
+  // start reading a download immediately, so next-turn revocation is still a
+  // race. The injected operations keep this lifecycle testable without
+  // starting real downloads in the browser selftest.
+  let url = null;
+  let anchor = null;
+  try {
+    url = createObjectURL(new Blob([text], { type: mime }));
+    anchor = el("a", { href: url, download: filename, style: "display:none" });
+    document.body.appendChild(anchor);
+    click(anchor);
+    schedule(() => {
+      anchor.remove();
+      revokeObjectURL(url);
+    }, DOWNLOAD_REVOKE_DELAY_MS);
+  } catch (error) {
+    anchor?.remove();
+    if (url !== null) revokeObjectURL(url);
+    throw error;
+  }
 }
