@@ -359,8 +359,18 @@ function openPanel() {
   const exportBtn = document.createElement("button");
   exportBtn.className = "btn";
   exportBtn.textContent = "Export JSON";
+  const exportStatus = document.createElement("div");
+  exportStatus.setAttribute("aria-live", "polite");
   exportBtn.addEventListener("click", () => {
-    download(Store.exportJSON(state), "application/json", "gene-keys-data-export.json");
+    try {
+      download(Store.exportJSON(state), "application/json", "gene-keys-data-export.json");
+      exportStatus.className = "notice";
+      exportStatus.textContent = "JSON download requested. If your browser did not save it, check its download permissions.";
+    } catch (error) {
+      console.error("JSON export failed:", error);
+      exportStatus.className = "error";
+      exportStatus.textContent = `Could not start the JSON download: ${error.message}`;
+    }
   });
   const importInput = document.createElement("input");
   importInput.type = "file";
@@ -405,7 +415,7 @@ function openPanel() {
     renderFirstRun();
   });
   strip.append(exportBtn, importBtn, clearBtn, importInput);
-  panel.append(dataH, strip);
+  panel.append(dataH, strip, exportStatus);
 
   const close = document.createElement("button");
   close.className = "btn subtle";

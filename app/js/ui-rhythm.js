@@ -18,34 +18,44 @@ export function renderRhythm(container, ctx) {
     preview.innerHTML = "";
     preview.style.display = "block";
     preview.append(el("div", { class: "empty" }, "Computing slow seasons…"));
+    exportBtn.disabled = true;
     setTimeout(() => {
-      // Pulled at click time, not render time: an app left open for days
-      // would otherwise export a stale list under a stale DTSTAMP, and a
-      // SEQUENCE below one already imported is a calendar client's cue to
-      // ignore the update.
-      const nowMs = Date.now();
-      const { ics, preview: rows } = buildCut({
-        sunWindows: ctx.sunWindows(),
-        seasons: ctx.seasons(),
-        spheres: ctx.spheres,
-        wheel: ctx.wheel,
-        host: location.host || "localhost",
-        nowMs,
-      });
-      download(ics, "text/calendar", "gene-keys-rhythm.ics");
+      try {
+        // Pulled at click time, not render time: an app left open for days
+        // would otherwise export a stale list under a stale DTSTAMP, and a
+        // SEQUENCE below one already imported is a calendar client's cue to
+        // ignore the update.
+        const nowMs = Date.now();
+        const { ics, preview: rows } = buildCut({
+          sunWindows: ctx.sunWindows(),
+          seasons: ctx.seasons(),
+          spheres: ctx.spheres,
+          wheel: ctx.wheel,
+          host: location.host || "localhost",
+          nowMs,
+        });
+        download(ics, "text/calendar", "gene-keys-rhythm.ics");
 
-      preview.innerHTML = "";
-      preview.append(el("h3", {}, "What the file holds"));
-      const list = el("div", { class: "row-list" });
-      for (const r of rows) {
-        const g = el("a", { href: r.gcalUrl, target: "_blank", rel: "noopener" }, "Google");
-        list.append(el("div", { class: "row-item" },
-          el("span", { class: "row-when" }, r.when),
-          el("span", { class: "row-what" }, r.summary + " "),
-          g));
+        preview.innerHTML = "";
+        preview.append(el("h3", {}, "What the file holds"));
+        const list = el("div", { class: "row-list" });
+        for (const r of rows) {
+          const g = el("a", { href: r.gcalUrl, target: "_blank", rel: "noopener" }, "Google");
+          list.append(el("div", { class: "row-item" },
+            el("span", { class: "row-when" }, r.when),
+            el("span", { class: "row-what" }, r.summary + " "),
+            g));
+        }
+        preview.append(list, el("p", { class: "notice" },
+          "Calendar download requested. If your browser did not save it, check its download permissions. Google links open only when clicked; nothing else leaves the device. Re-export once a year and re-import: the same event IDs update in place."));
+      } catch (error) {
+        console.error("Calendar export failed:", error);
+        preview.innerHTML = "";
+        preview.append(el("div", { class: "error", role: "alert" },
+          `Could not start the calendar download: ${error.message}`));
+      } finally {
+        exportBtn.disabled = false;
       }
-      preview.append(list, el("p", { class: "notice" },
-        "The .ics downloaded. Google links open only when clicked; nothing else leaves the device. Re-export once a year and re-import: the same event IDs update in place."));
     }, 30);
   });
 

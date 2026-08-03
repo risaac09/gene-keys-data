@@ -14,7 +14,9 @@ import { makeNowStates } from "./now.js";
 import * as ICS from "./ics.js";
 import { buildCut } from "./export.js";
 import { zonedToUtc, offsetToUtc } from "./tz.js";
-import { parseOffset } from "./ui-birth.js";
+import { DOWNLOAD_REVOKE_DELAY_MS, download, labelFor } from "./dom.js";
+import { parseOffset, renderBirthForm } from "./ui-birth.js";
+import { renderExplore } from "./ui-explore.js";
 import * as Store from "./store.js";
 
 const DAY = 86400000;
@@ -438,6 +440,87 @@ export function buildCases(wheelDoc, hexagrams) {
           assert(threw, `maxStep(${String(rate)}) should throw`);
         }
         return "undefined, NaN, 0, and negative all rejected by both guards";
+      },
+    },
+    {
+      id: "dom-controls",
+      name: "Labels resolve and the Explore gate picker has 64 unique values",
+      run() {
+        const input = document.createElement("input");
+        const label = labelFor(input, "Synthetic field");
+        assert(input.id && label.getAttribute("for") === input.id, "labelFor did not wire the pair");
+
+        const birth = document.createElement("div");
+        renderBirthForm(birth, {
+          existing: null,
+          timeSensitiveNote: "Synthetic selftest.",
+          onSave() {},
+        });
+        const controls = [...birth.querySelectorAll("input, select")];
+        assert(controls.length === 7, `expected 7 birth controls, got ${controls.length}`);
+        for (const control of controls) {
+          assert(control.id, "birth control has no id");
+          assert(birth.querySelector(`label[for="${control.id}"]`), `no label for ${control.id}`);
+        }
+
+        const explore = document.createElement("div");
+        renderExplore(explore, {
+          gates: new Set([1, 2, 64]),
+          coverageConj: 0,
+          coverageBoth: 0,
+          wheel,
+          exploreWindows() { return []; },
+        });
+        const selects = explore.querySelectorAll("select");
+        const gateValues = [...selects[1].options].map((option) => option.value);
+        assert(gateValues.length === 64, `expected 64 gate options, got ${gateValues.length}`);
+        assert(new Set(gateValues).size === 64, "Explore gate options contain duplicates");
+        for (const control of explore.querySelectorAll("select, input")) {
+          assert(control.id, "Explore control has no id");
+          assert(explore.querySelector(`label[for="${control.id}"]`), `no label for ${control.id}`);
+        }
+        return "7 birth labels, 3 Explore labels, 64 unique gate options";
+      },
+    },
+    {
+      id: "download-lifecycle",
+      name: "Downloads stay alive and clean up successful and failed starts",
+      run() {
+        let cleanup = null;
+        let delay = null;
+        let clickedInDocument = false;
+        const revoked = [];
+        download("synthetic", "text/plain", "selftest.txt", {
+          createObjectURL() { return "blob:selftest"; },
+          revokeObjectURL(url) { revoked.push(url); },
+          schedule(fn, ms) { cleanup = fn; delay = ms; },
+          click(anchor) { clickedInDocument = document.body.contains(anchor); },
+        });
+        assert(clickedInDocument, "download anchor was clicked outside the document");
+        assert(delay === DOWNLOAD_REVOKE_DELAY_MS, `unexpected revoke delay ${delay}`);
+        assert(delay >= 1000, "object URL is still revoked on the next turn");
+        assert(revoked.length === 0, "object URL revoked before cleanup");
+        assert(document.querySelector('a[download="selftest.txt"]'), "download anchor disappeared early");
+        cleanup();
+        assert(revoked.length === 1 && revoked[0] === "blob:selftest", "cleanup did not revoke the URL");
+        assert(!document.querySelector('a[download="selftest.txt"]'), "cleanup did not remove the anchor");
+
+        let failedAnchor = null;
+        let threw = false;
+        try {
+          download("synthetic", "text/plain", "failed.txt", {
+            createObjectURL() { return "blob:failed"; },
+            revokeObjectURL(url) { revoked.push(url); },
+            schedule() { throw new Error("schedule should not run"); },
+            click(anchor) { failedAnchor = anchor; throw new Error("blocked"); },
+          });
+        } catch (error) {
+          threw = error.message === "blocked";
+        }
+        assert(threw, "failed download did not rethrow");
+        assert(failedAnchor && !document.body.contains(failedAnchor), "failed anchor was not removed");
+        assert(revoked.includes("blob:failed"), "failed download did not revoke its URL");
+        return "60-second lifetime, deferred cleanup, synchronous failure cleanup";
       },
     },
     {
