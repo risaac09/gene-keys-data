@@ -32,7 +32,7 @@ Rudd's text stays Rudd's. Your chart data stays yours. The structure between the
 
 ## What I'd like back
 
-Nothing required. If something here is wrong, open an issue or a PR. If you publish anything that uses this, a citation back is generous, not obligatory. If the structure is useful and you want to push it further, the codon mapping and the Venus/Pearl sequences are the next canonical fills (see `CONTRIBUTING.md`).
+Nothing required. If something here is wrong, open an issue or a PR. If you publish anything that uses this, a citation back is generous, not obligatory. If the structure is useful and you want to push it further, the codon mapping and the codon rings are the next canonical fills, and the `name` field waits on Gene Keys Publishing permission (see `CONTRIBUTING.md`).
 
 If none of the above, that's fine too. This was worth building either way.
 
