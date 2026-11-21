@@ -2,8 +2,8 @@
 
 Before a substantive task, state in one line the model, effort, and why, then
 proceed. The main session runs Opus 5.5; delegated and routine work anchors on
-Sonnet 5.5 at medium. Ask first only when escalating above that anchor, when
-spending Fable, or before launching a Workflow fan-out (state the agent
+Sonnet 5.5 at medium. Ask first only when escalating delegated work above that
+anchor, when spending Fable, or before launching a Workflow fan-out (state the agent
 count). If the operator redirects, the operator's call wins for the rest of the session.
 Then, once per session for substantive work, log it (no `--land`; the nightly batch lander lands it):
 `~/stack-data/scripts/sd-ai-engage --json '{"routedTier":"<model>/<effort>"}'`
@@ -65,7 +65,7 @@ by rarity.
 
 Log the tier and whether the work needed a second review round:
 
-    sd-ai-engage --json '{"routedTier":"opus-5.5/medium","secondRound":false,"items":["OPS-07"]}' --land
+    ~/stack-data/scripts/sd-ai-engage --json '{"routedTier":"opus-5.5/medium","secondRound":false,"items":["OPS-07"]}'
 
 `items` names the planning ids the work moved (`scripts/sd-ref --list --state
 open`); the session id is filled from the environment.
